@@ -107,6 +107,7 @@
                 android:layout_width="170dp"
                 android:layout_height="170dp"
                 android:layout_margin="10dp"
+                android:onClick="monitoringActivity"
                 app:cardBackgroundColor="@color/gray"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="5dp">

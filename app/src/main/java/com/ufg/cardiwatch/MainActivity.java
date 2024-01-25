@@ -18,4 +18,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
     }
+
+    public void monitoringActivity(View view) {
+        Intent intent = new Intent(this, MonitoringActivity.class);
+        startActivity(intent);
+    }
 }
