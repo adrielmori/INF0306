@@ -13,10 +13,14 @@
         android:theme="@style/Theme.CardiWatch"
         tools:targetApi="31">
         <activity
-            android:name=".ProfileActivity"
+            android:name=".MonitoryActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
             />
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

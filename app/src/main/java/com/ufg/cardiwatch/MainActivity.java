@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void monitoringActivity(View view) {
-        Intent intent = new Intent(this, MonitoringActivity.class);
+        Intent intent = new Intent(this, MonitoryActivity.class);
         startActivity(intent);
     }
 }
