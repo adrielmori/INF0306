@@ -1,0 +1,257 @@
+Index: app/src/main/res/layout/activity_main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<ScrollView xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    android:background=\"@color/black\"\r\n    tools:context=\".MainActivity\">\r\n\r\n\r\n    <LinearLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\"\r\n        android:orientation=\"vertical\">\r\n\r\n\r\n        <GridLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"match_parent\"\r\n            android:rowCount=\"4\"\r\n            android:columnCount=\"2\"\r\n            android:layout_margin=\"5dp\"\r\n            android:alignmentMode=\"alignMargins\"\r\n            android:layout_gravity=\"center_horizontal\"\r\n            android:columnOrderPreserved=\"false\">\r\n\r\n\r\n            <androidx.cardview.widget.CardView\r\n                android:layout_width=\"170dp\"\r\n                android:layout_height=\"170dp\"\r\n                app:cardCornerRadius=\"12dp\"\r\n                app:cardElevation=\"5dp\"\r\n                app:cardBackgroundColor=\"@color/gray\"\r\n                android:layout_margin=\"10dp\">\r\n\r\n                <LinearLayout\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"match_parent\"\r\n                    android:orientation=\"vertical\"\r\n                    android:gravity=\"center\"\r\n                    >\r\n\r\n                    <ImageView\r\n                        android:layout_width=\"24dp\"\r\n                        android:layout_height=\"24dp\"\r\n                        android:src=\"@drawable/idea\"\r\n                        android:layout_marginTop=\"18dp\"/>\r\n\r\n                    <TextView\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:text=\"Digital Twin\"\r\n                        android:fontFamily=\"@font/googlesans_bold\"\r\n                        android:textSize=\"18sp\"\r\n                        android:textColor=\"@color/white\"\r\n                        android:layout_marginTop=\"20dp\"/>\r\n\r\n                </LinearLayout>\r\n\r\n            </androidx.cardview.widget.CardView>\r\n\r\n\r\n            <androidx.cardview.widget.CardView\r\n                android:layout_width=\"170dp\"\r\n                android:layout_height=\"170dp\"\r\n                android:layout_margin=\"10dp\"\r\n                android:clickable=\"true\"\r\n                android:onClick=\"profileActivity\"\r\n                app:cardBackgroundColor=\"@color/gray\"\r\n                app:cardCornerRadius=\"12dp\"\r\n                app:cardElevation=\"5dp\">\r\n\r\n                <LinearLayout\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"match_parent\"\r\n                    android:gravity=\"center\"\r\n                    android:orientation=\"vertical\">\r\n\r\n                    <ImageView\r\n                        android:layout_width=\"24dp\"\r\n                        android:layout_height=\"24dp\"\r\n                        android:layout_marginTop=\"18dp\"\r\n                        android:src=\"@drawable/suggestion\" />\r\n\r\n                    <TextView\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:layout_marginTop=\"20dp\"\r\n                        android:fontFamily=\"@font/googlesans_bold\"\r\n                        android:text=\"Profile\"\r\n                        android:textColor=\"@color/white\"\r\n                        android:textSize=\"18sp\" />\r\n\r\n                </LinearLayout>\r\n\r\n            </androidx.cardview.widget.CardView>\r\n\r\n            <androidx.cardview.widget.CardView\r\n                android:layout_width=\"170dp\"\r\n                android:layout_height=\"170dp\"\r\n                app:cardCornerRadius=\"12dp\"\r\n                app:cardElevation=\"5dp\"\r\n                app:cardBackgroundColor=\"@color/gray\"\r\n                android:layout_margin=\"10dp\">\r\n\r\n                <LinearLayout\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"match_parent\"\r\n                    android:orientation=\"vertical\"\r\n                    android:gravity=\"center\"\r\n                    >\r\n\r\n                    <ImageView\r\n                        android:layout_width=\"24dp\"\r\n                        android:layout_height=\"24dp\"\r\n                        android:src=\"@drawable/career\"\r\n                        android:layout_marginTop=\"18dp\"/>\r\n\r\n                    <TextView\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:text=\"Monitoring\"\r\n                        android:fontFamily=\"@font/googlesans_bold\"\r\n                        android:textSize=\"18sp\"\r\n                        android:textColor=\"@color/white\"\r\n                        android:layout_marginTop=\"20dp\"/>\r\n\r\n                </LinearLayout>\r\n\r\n            </androidx.cardview.widget.CardView>\r\n\r\n            <androidx.cardview.widget.CardView\r\n                android:layout_width=\"170dp\"\r\n                android:layout_height=\"170dp\"\r\n                app:cardCornerRadius=\"12dp\"\r\n                app:cardElevation=\"5dp\"\r\n                app:cardBackgroundColor=\"@color/gray\"\r\n                android:layout_margin=\"10dp\">\r\n\r\n                <LinearLayout\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"match_parent\"\r\n                    android:orientation=\"vertical\"\r\n                    android:gravity=\"center\"\r\n                    >\r\n\r\n                    <ImageView\r\n                        android:layout_width=\"24dp\"\r\n                        android:layout_height=\"24dp\"\r\n                        android:src=\"@drawable/medical\"\r\n                        android:layout_marginTop=\"18dp\"/>\r\n\r\n                    <TextView\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:text=\"Medical\"\r\n                        android:fontFamily=\"@font/googlesans_bold\"\r\n                        android:textSize=\"18sp\"\r\n                        android:textColor=\"@color/white\"\r\n                        android:layout_marginTop=\"20dp\"/>\r\n\r\n                </LinearLayout>\r\n\r\n            </androidx.cardview.widget.CardView>\r\n\r\n            <androidx.cardview.widget.CardView\r\n                android:layout_width=\"170dp\"\r\n                android:layout_height=\"170dp\"\r\n                app:cardCornerRadius=\"12dp\"\r\n                app:cardElevation=\"5dp\"\r\n                app:cardBackgroundColor=\"@color/gray\"\r\n                android:layout_margin=\"10dp\">\r\n\r\n                <LinearLayout\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"match_parent\"\r\n                    android:orientation=\"vertical\"\r\n                    android:gravity=\"center\"\r\n                    >\r\n\r\n                    <ImageView\r\n                        android:layout_width=\"24dp\"\r\n                        android:layout_height=\"24dp\"\r\n                        android:src=\"@drawable/food\"\r\n                        android:layout_marginTop=\"18dp\"/>\r\n\r\n                    <TextView\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:text=\"Calories\"\r\n                        android:fontFamily=\"@font/googlesans_bold\"\r\n                        android:textSize=\"18sp\"\r\n                        android:textColor=\"@color/white\"\r\n                        android:layout_marginTop=\"20dp\"/>\r\n\r\n                </LinearLayout>\r\n\r\n            </androidx.cardview.widget.CardView>\r\n\r\n            <androidx.cardview.widget.CardView\r\n                android:layout_width=\"170dp\"\r\n                android:layout_height=\"170dp\"\r\n                app:cardCornerRadius=\"12dp\"\r\n                app:cardElevation=\"5dp\"\r\n                app:cardBackgroundColor=\"@color/gray\"\r\n                android:layout_margin=\"10dp\">\r\n\r\n                <LinearLayout\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"match_parent\"\r\n                    android:orientation=\"vertical\"\r\n                    android:gravity=\"center\"\r\n                    >\r\n\r\n                    <ImageView\r\n                        android:layout_width=\"24dp\"\r\n                        android:layout_height=\"24dp\"\r\n                        android:src=\"@drawable/gym\"\r\n                        android:layout_marginTop=\"18dp\"/>\r\n\r\n                    <TextView\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:text=\"Gym\"\r\n                        android:fontFamily=\"@font/googlesans_bold\"\r\n                        android:textSize=\"18sp\"\r\n                        android:textColor=\"@color/white\"\r\n                        android:layout_marginTop=\"20dp\"/>\r\n\r\n                </LinearLayout>\r\n\r\n            </androidx.cardview.widget.CardView>\r\n\r\n            <androidx.cardview.widget.CardView\r\n                android:layout_width=\"170dp\"\r\n                android:layout_height=\"170dp\"\r\n                app:cardCornerRadius=\"12dp\"\r\n                app:cardElevation=\"5dp\"\r\n                app:cardBackgroundColor=\"@color/gray\"\r\n                android:layout_margin=\"10dp\">\r\n\r\n                <LinearLayout\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"match_parent\"\r\n                    android:orientation=\"vertical\"\r\n                    android:gravity=\"center\"\r\n                    >\r\n\r\n                    <ImageView\r\n                        android:layout_width=\"24dp\"\r\n                        android:layout_height=\"24dp\"\r\n                        android:src=\"@drawable/settings\"\r\n                        android:layout_marginTop=\"18dp\"/>\r\n\r\n                    <TextView\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:text=\"Settings\"\r\n                        android:fontFamily=\"@font/googlesans_bold\"\r\n                        android:textSize=\"18sp\"\r\n                        android:textColor=\"@color/white\"\r\n                        android:layout_marginTop=\"20dp\"/>\r\n\r\n                </LinearLayout>\r\n\r\n            </androidx.cardview.widget.CardView>\r\n\r\n            <androidx.cardview.widget.CardView\r\n                android:layout_width=\"170dp\"\r\n                android:layout_height=\"170dp\"\r\n                app:cardCornerRadius=\"12dp\"\r\n                app:cardElevation=\"5dp\"\r\n                app:cardBackgroundColor=\"@color/gray\"\r\n                android:layout_margin=\"10dp\">\r\n\r\n                <LinearLayout\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"match_parent\"\r\n                    android:orientation=\"vertical\"\r\n                    android:gravity=\"center\"\r\n                    >\r\n\r\n                    <ImageView\r\n                        android:layout_width=\"24dp\"\r\n                        android:layout_height=\"24dp\"\r\n                        android:src=\"@drawable/trash\"\r\n                        android:layout_marginTop=\"18dp\"/>\r\n\r\n                    <TextView\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:text=\"Delete\"\r\n                        android:fontFamily=\"@font/googlesans_bold\"\r\n                        android:textSize=\"18sp\"\r\n                        android:textColor=\"@color/white\"\r\n                        android:layout_marginTop=\"20dp\"/>\r\n\r\n                </LinearLayout>\r\n            </androidx.cardview.widget.CardView>\r\n        </GridLayout>\r\n    </LinearLayout>\r\n</ScrollView>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_main.xml b/app/src/main/res/layout/activity_main.xml
+--- a/app/src/main/res/layout/activity_main.xml	
++++ b/app/src/main/res/layout/activity_main.xml	
+@@ -106,24 +106,24 @@
+                 <LinearLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="match_parent"
+-                    android:orientation="vertical"
+                     android:gravity="center"
+-                    >
++                    android:onClick="monitoringActivity"
++                    android:orientation="vertical">
+ 
+                     <ImageView
+                         android:layout_width="24dp"
+                         android:layout_height="24dp"
+-                        android:src="@drawable/career"
+-                        android:layout_marginTop="18dp"/>
++                        android:layout_marginTop="18dp"
++                        android:src="@drawable/career" />
+ 
+                     <TextView
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+-                        android:text="Monitoring"
++                        android:layout_marginTop="20dp"
+                         android:fontFamily="@font/googlesans_bold"
+-                        android:textSize="18sp"
++                        android:text="Monitoring"
+                         android:textColor="@color/white"
+-                        android:layout_marginTop="20dp"/>
++                        android:textSize="18sp" />
+ 
+                 </LinearLayout>
+ 
+Index: app/src/main/java/com/ufg/cardiwatch/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.ufg.cardiwatch;\r\n\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.view.View;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\npublic class MainActivity extends AppCompatActivity {\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_main);\r\n    }\r\n\r\n    public void profileActivity(View view) {\r\n        Intent intent = new Intent(this, ProfileActivity.class);\r\n        startActivity(intent);\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/ufg/cardiwatch/MainActivity.java b/app/src/main/java/com/ufg/cardiwatch/MainActivity.java
+--- a/app/src/main/java/com/ufg/cardiwatch/MainActivity.java	
++++ b/app/src/main/java/com/ufg/cardiwatch/MainActivity.java	
+@@ -18,4 +18,9 @@
+         Intent intent = new Intent(this, ProfileActivity.class);
+         startActivity(intent);
+     }
++
++    public void monitoringActivity(View view) {
++        Intent intent = new Intent(this, MonitoringActivity.class);
++        startActivity(intent);
++    }
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/ufg/cardiwatch/MonitoringActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/ufg/cardiwatch/MonitoringActivity.java b/app/src/main/java/com/ufg/cardiwatch/MonitoringActivity.java
+new file mode 100644
+--- /dev/null	
++++ b/app/src/main/java/com/ufg/cardiwatch/MonitoringActivity.java	
+@@ -0,0 +1,15 @@
++package com.ufg.cardiwatch;
++
++import android.os.Bundle;
++
++import androidx.appcompat.app.AppCompatActivity;
++
++public class MonitoringActivity extends AppCompatActivity {
++
++    @Override
++    protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        setContentView(R.layout.activity_monitoring);
++//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
++    }
++}
+\ No newline at end of file
+Index: app/src/main/res/layout/activity_monitoring.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_monitoring.xml b/app/src/main/res/layout/activity_monitoring.xml
+new file mode 100644
+--- /dev/null	
++++ b/app/src/main/res/layout/activity_monitoring.xml	
+@@ -0,0 +1,157 @@
++<?xml version="1.0" encoding="utf-8"?>
++<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    tools:context=".MonitoringActivity">
++
++    <LinearLayout
++        android:layout_width="match_parent"
++        android:layout_height="match_parent"
++        android:gravity="center_horizontal"
++        android:orientation="vertical">
++
++        <ImageView
++            android:id="@+id/imageView"
++            android:layout_width="wrap_content"
++            android:layout_height="236dp"
++            android:layout_marginTop="64dp"
++            android:scaleType="center"
++            app:srcCompat="@drawable/ic_launcher_background"
++            tools:srcCompat="@tools:sample/avatars" />
++
++        <LinearLayout
++            android:layout_width="354dp"
++            android:layout_height="wrap_content"
++            android:background="#F6FAFC"
++            android:gravity="center_horizontal"
++            android:orientation="vertical">
++
++            <TextView
++                android:id="@+id/textView"
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:gravity="center"
++                android:text="Suas informações pessoais" />
++
++            <LinearLayout
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:orientation="horizontal">
++
++                <TextView
++                    android:id="@+id/textGenero"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_weight="1"
++                    android:text="Nome"
++                    android:textStyle="bold" />
++
++                <TextView
++                    android:id="@+id/textView3"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_weight="1"
++                    android:gravity="right"
++                    android:text="exemplo" />
++
++            </LinearLayout>
++
++            <LinearLayout
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:orientation="horizontal">
++
++                <TextView
++                    android:id="@+id/textGenero"
++                    android:layout_width="36dp"
++                    android:layout_height="wrap_content"
++                    android:layout_weight="1"
++                    android:text="Gênero"
++                    android:textStyle="bold" />
++
++                <TextView
++                    android:id="@+id/textView3"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_weight="1"
++                    android:gravity="right"
++                    android:text="exemplo" />
++
++            </LinearLayout>
++
++            <LinearLayout
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:orientation="horizontal">
++
++                <TextView
++                    android:id="@+id/textGenero"
++                    android:layout_width="39dp"
++                    android:layout_height="wrap_content"
++                    android:layout_weight="1"
++                    android:text="Nascimento"
++                    android:textStyle="bold" />
++
++                <TextView
++                    android:id="@+id/textView3"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_weight="1"
++                    android:gravity="right"
++                    android:text="exemplo" />
++
++            </LinearLayout>
++
++            <LinearLayout
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:orientation="horizontal">
++
++                <TextView
++                    android:id="@+id/textGenero"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_weight="1"
++                    android:text="Altura"
++                    android:textStyle="bold" />
++
++                <TextView
++                    android:id="@+id/textView3"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_weight="1"
++                    android:gravity="right"
++                    android:text="exemplo" />
++
++            </LinearLayout>
++
++            <LinearLayout
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:orientation="horizontal">
++
++                <TextView
++                    android:id="@+id/textGenero"
++                    android:layout_width="44dp"
++                    android:layout_height="wrap_content"
++                    android:layout_weight="1"
++                    android:text="Peso"
++                    android:textStyle="bold" />
++
++                <TextView
++                    android:id="@+id/textView3"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_weight="1"
++                    android:gravity="right"
++                    android:text="exemplo" />
++
++            </LinearLayout>
++
++        </LinearLayout>
++
++    </LinearLayout>
++
++</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
