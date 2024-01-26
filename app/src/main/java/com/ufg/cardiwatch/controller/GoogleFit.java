@@ -56,7 +56,7 @@ public class GoogleFit {
                             for (DataPoint dp : dataSet.getDataPoints()) {
                                 HeartRate heartRate = new HeartRate();
                                 heartRate.setDay(dp.getStartTime(TimeUnit.DAYS));
-                                heartRate.setBpm(dp.getValue(dp.getDataType().getFields().get(0)));
+                                heartRate.setBpm(dp.getValue(dp.getDataType().getFields().get(0)).asFloat());
                                 heartRates.add(heartRate);
                             }
                         }
@@ -101,7 +101,7 @@ public class GoogleFit {
                             for (DataPoint dp : dataSet.getDataPoints()) {
                                 Step step = new Step();
                                 step.setDay(dp.getStartTime(TimeUnit.DAYS));
-                                step.setSteps(dp.getValue(dp.getDataType().getFields().get(0)));
+                                step.setSteps(dp.getValue(dp.getDataType().getFields().get(0)).asInt());
                                 steps.add(step);
                             }
                         }
@@ -146,7 +146,7 @@ public class GoogleFit {
                             for (DataPoint dp : dataSet.getDataPoints()) {
                                 Activity activity = new Activity();
                                 activity.setDay(dp.getStartTime(TimeUnit.DAYS));
-                                activity.setActivity(dp.getValue(dp.getDataType().getFields().get(0)));
+                                activity.setActivity(dp.getValue(dp.getDataType().getFields().get(0)).asInt());
                                 activities.add(activity);
                             }
                         }
@@ -191,7 +191,7 @@ public class GoogleFit {
                             for (DataPoint dp : dataSet.getDataPoints()) {
                                 Weight weight = new Weight();
                                 weight.setDay(dp.getStartTime(TimeUnit.DAYS));
-                                weight.setWeight(dp.getValue(dp.getDataType().getFields().get(0)));
+                                weight.setWeight(dp.getValue(dp.getDataType().getFields().get(0)).asFloat());
                                 weights.add(weight);
                             }
                         }
@@ -237,7 +237,7 @@ public class GoogleFit {
                                 Sleep sleep = new Sleep();
                                 sleep.setDay(dp.getStartTime(TimeUnit.DAYS));
                                 for (Field field : dp.getDataType().getFields()) {
-                                    sleep.setSleep(dp.getValue(field));
+                                    sleep.setSleep(dp.getValue(field).asInt());
                                 }
                                 sleeps.add(sleep);
                             }

@@ -1,8 +1,9 @@
 package com.ufg.cardiwatch.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Pessoa {
+public class Pessoa implements Serializable {
     List<Activity> activities;
     List<HeartRate> heartRates;
     List<Sleep> sleeps;

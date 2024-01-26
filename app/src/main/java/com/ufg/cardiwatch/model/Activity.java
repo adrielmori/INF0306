@@ -1,15 +1,19 @@
 package com.ufg.cardiwatch.model;
 
+import android.content.Intent;
+
 import com.google.android.gms.fitness.data.Value;
 
-public class Activity {
+import java.io.Serializable;
+
+public class Activity implements Serializable {
     private Long day;
-    private Value activity;
+    private Integer activity;
 
     public Activity() {
     }
 
-    public Activity(Long day, Value activity) {
+    public Activity(Long day, Integer activity) {
         this.day = day;
         this.activity = activity;
     }
@@ -22,11 +26,11 @@ public class Activity {
         this.day = day;
     }
 
-    public Value getActivity() {
+    public Integer getActivity() {
         return activity;
     }
 
-    public void setActivity(Value activity) {
+    public void setActivity(Integer activity) {
         this.activity = activity;
     }
 

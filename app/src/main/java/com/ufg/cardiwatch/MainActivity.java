@@ -20,6 +20,7 @@ import com.ufg.cardiwatch.model.Sleep;
 import com.ufg.cardiwatch.model.Step;
 import com.ufg.cardiwatch.model.Weight;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -70,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void monitoringActivity(View view) {
         Intent intent = new Intent(this, MonitoryActivity.class);
+        // enviar pessoa
+        intent.putExtra("pessoa", pessoa);
         startActivity(intent);
     }
 

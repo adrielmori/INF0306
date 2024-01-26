@@ -3,14 +3,16 @@ package com.ufg.cardiwatch.model;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Value;
 
-public class HeartRate {
+import java.io.Serializable;
+
+public class HeartRate implements Serializable {
     private Long day;
-    private Value bpm;
+    private Float bpm;
 
     public HeartRate() {
     }
 
-    public HeartRate(Long day, Value bpm) {
+    public HeartRate(Long day, Float bpm) {
         this.day = day;
         this.bpm = bpm;
     }
@@ -23,11 +25,11 @@ public class HeartRate {
         this.day = day;
     }
 
-    public Value getBpm() {
+    public Float getBpm() {
         return bpm;
     }
 
-    public void setBpm(Value bpm) {
+    public void setBpm(Float bpm) {
         this.bpm = bpm;
     }
 

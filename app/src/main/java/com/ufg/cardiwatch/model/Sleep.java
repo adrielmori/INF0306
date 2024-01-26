@@ -2,14 +2,16 @@ package com.ufg.cardiwatch.model;
 
 import com.google.android.gms.fitness.data.Value;
 
-public class Sleep {
+import java.io.Serializable;
+
+public class Sleep implements Serializable {
     private Long day;
-    private Value sleep;
+    private Integer sleep;
 
     public Sleep() {
     }
 
-    public Sleep(Long day, Value sleep) {
+    public Sleep(Long day, Integer sleep) {
         this.day = day;
         this.sleep = sleep;
     }
@@ -22,11 +24,11 @@ public class Sleep {
         this.day = day;
     }
 
-    public Value getSleep() {
+    public Integer getSleep() {
         return sleep;
     }
 
-    public void setSleep(Value sleep) {
+    public void setSleep(Integer sleep) {
         this.sleep = sleep;
     }
 

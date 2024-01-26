@@ -2,14 +2,16 @@ package com.ufg.cardiwatch.model;
 
 import com.google.android.gms.fitness.data.Value;
 
-public class Weight{
+import java.io.Serializable;
+
+public class Weight implements Serializable {
     private Long day;
-    private Value weight;
+    private Float weight;
 
     public Weight() {
     }
 
-    public Weight(Long day, Value weight) {
+    public Weight(Long day, Float weight) {
         this.day = day;
         this.weight = weight;
     }
@@ -22,11 +24,11 @@ public class Weight{
         this.day = day;
     }
 
-    public Value getWeight() {
+    public Float getWeight() {
         return weight;
     }
 
-    public void setWeight(Value weight) {
+    public void setWeight(Float weight) {
         this.weight = weight;
     }
 
