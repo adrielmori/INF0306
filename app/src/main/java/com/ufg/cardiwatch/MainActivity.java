@@ -1,7 +1,5 @@
 package com.ufg.cardiwatch;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,18 +13,21 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.fitness.FitnessOptions;
 import com.google.android.gms.fitness.data.DataType;
+import com.ufg.cardiwatch.controller.GoogleFit;
 import com.ufg.cardiwatch.model.Activity;
 import com.ufg.cardiwatch.model.HeartRate;
+import com.ufg.cardiwatch.model.Pessoa;
 import com.ufg.cardiwatch.model.Sleep;
 import com.ufg.cardiwatch.model.Step;
 import com.ufg.cardiwatch.model.Weight;
-import com.ufg.cardiwatch.controller.GoogleFit;
 
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
+
+    private final Pessoa pessoa = new Pessoa();
     private FitnessOptions fitnessOptions = FitnessOptions.builder()
             .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
             .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void profileActivity(View view) {
         Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra("peso", pessoa.getWeights().get(pessoa.getWeights().size() - 1).getWeight().toString());
         startActivity(intent);
     }
 
@@ -86,11 +88,12 @@ public class MainActivity extends AppCompatActivity {
             List<Sleep> sleeps = GoogleFit.getSleep(MainActivity.this);
 
             runOnUiThread(() -> {
-                Log.i(TAG, "accessGoogleFit: " + steps);
-                Log.i(TAG, "accessGoogleFit: " + heartRates);
-                Log.i(TAG, "accessGoogleFit: " + activities);
-                Log.i(TAG, "accessGoogleFit: " + weights);
-                Log.i(TAG, "accessGoogleFit: " + sleeps);
+                // Este código será executado na thread principal
+                pessoa.setSteps(steps);
+                pessoa.setHeartRates(heartRates);
+                pessoa.setActivities(activities);
+                pessoa.setWeights(weights);
+                pessoa.setSleeps(sleeps);
             });
         });
 

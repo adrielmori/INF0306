@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:text="exemplo"
+                android:text="Adriel Mori"
                 android:textSize="18sp" />
 
         </LinearLayout>
@@ -106,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:text="exemplo"
+                android:text="Male"
                 android:textSize="18sp" />
 
         </LinearLayout>
@@ -133,7 +133,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:text="exemplo"
+                android:text="25/07/1999"
                 android:textSize="18sp" />
 
         </LinearLayout>
@@ -160,7 +160,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:text="exemplo"
+                android:text="185 cm"
                 android:textSize="18sp" />
 
         </LinearLayout>
