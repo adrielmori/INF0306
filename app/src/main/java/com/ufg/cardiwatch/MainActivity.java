@@ -13,29 +13,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.fitness.Fitness;
-import com.google.android.gms.fitness.FitnessActivities;
 import com.google.android.gms.fitness.FitnessOptions;
-import com.google.android.gms.fitness.data.Bucket;
-import com.google.android.gms.fitness.data.DataPoint;
-import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataType;
-import com.google.android.gms.fitness.data.Field;
-import com.google.android.gms.fitness.data.Value;
-import com.google.android.gms.fitness.request.DataReadRequest;
 import com.ufg.cardiwatch.model.Activity;
 import com.ufg.cardiwatch.model.HeartRate;
 import com.ufg.cardiwatch.model.Sleep;
 import com.ufg.cardiwatch.model.Step;
 import com.ufg.cardiwatch.model.Weight;
-import com.ufg.cardiwatch.service.GoogleFit;
+import com.ufg.cardiwatch.controller.GoogleFit;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     private FitnessOptions fitnessOptions = FitnessOptions.builder()

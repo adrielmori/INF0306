@@ -1,4 +1,4 @@
-package com.ufg.cardiwatch.service;
+package com.ufg.cardiwatch.controller;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
