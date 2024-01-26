@@ -3,7 +3,6 @@ package com.ufg.cardiwatch;
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import android.content.Intent;
-import android.credentials.Credential;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,23 +13,31 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.fitness.Fitness;
+import com.google.android.gms.fitness.FitnessActivities;
 import com.google.android.gms.fitness.FitnessOptions;
 import com.google.android.gms.fitness.data.Bucket;
 import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
+import com.google.android.gms.fitness.data.Value;
 import com.google.android.gms.fitness.request.DataReadRequest;
+import com.ufg.cardiwatch.model.Activity;
+import com.ufg.cardiwatch.model.HeartRate;
+import com.ufg.cardiwatch.model.Sleep;
+import com.ufg.cardiwatch.model.Step;
+import com.ufg.cardiwatch.model.Weight;
+import com.ufg.cardiwatch.service.GoogleFit;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
-
     private FitnessOptions fitnessOptions = FitnessOptions.builder()
             .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
             .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
@@ -39,9 +46,10 @@ public class MainActivity extends AppCompatActivity {
             .addDataType(DataType.TYPE_ACTIVITY_SEGMENT, FitnessOptions.ACCESS_READ)
             .addDataType(DataType.AGGREGATE_ACTIVITY_SUMMARY, FitnessOptions.ACCESS_WRITE)
             .addDataType(DataType.TYPE_SLEEP_SEGMENT, FitnessOptions.ACCESS_READ)
+            .addDataType(DataType.AGGREGATE_WEIGHT_SUMMARY, FitnessOptions.ACCESS_WRITE)
+            .addDataType(DataType.TYPE_WEIGHT, FitnessOptions.ACCESS_READ)
+            .addDataType(DataType.TYPE_SLEEP_SEGMENT, FitnessOptions.ACCESS_READ)
             .build();
-
-    private GoogleSignInAccount account;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -50,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        account = GoogleSignIn.getAccountForExtension(this, fitnessOptions);
+        GoogleSignInAccount account = GoogleSignIn.getAccountForExtension(this, fitnessOptions);
 
         if (!GoogleSignIn.hasPermissions(account, fitnessOptions)) {
             GoogleSignIn.requestPermissions(
@@ -63,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
                 accessGoogleFit();
             }
         }
-
     }
 
     public void profileActivity(View view) {
@@ -79,75 +86,24 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void accessGoogleFit() {
-        LocalDateTime end = LocalDateTime.now();
-        LocalDateTime start = end.minusYears(1);
-        long endSeconds = end.atZone(ZoneId.systemDefault()).toEpochSecond();
-        long startSeconds = start.atZone(ZoneId.systemDefault()).toEpochSecond();
+        // criar uma thread para pegar os dados
+        Executor executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            // Esta parte será executada em uma thread separada
+            List<Step> steps = GoogleFit.getSteps(MainActivity.this);
+            List<HeartRate> heartRates = GoogleFit.getHeartRate(MainActivity.this);
+            List<Activity> activities = GoogleFit.getActivities(MainActivity.this);
+            List<Weight> weights = GoogleFit.getWeight(MainActivity.this);
+            List<Sleep> sleeps = GoogleFit.getSleep(MainActivity.this);
 
-        // pegar o aggregate de heart rate
-        DataReadRequest readRequest = new DataReadRequest.Builder()
-                .aggregate(DataType.TYPE_HEART_RATE_BPM, DataType.AGGREGATE_HEART_RATE_SUMMARY)
-                .bucketByTime(1, TimeUnit.DAYS)
-                .setTimeRange(startSeconds, endSeconds, TimeUnit.SECONDS)
-                .build();
+            runOnUiThread(() -> {
+                Log.i(TAG, "accessGoogleFit: " + steps);
+                Log.i(TAG, "accessGoogleFit: " + heartRates);
+                Log.i(TAG, "accessGoogleFit: " + activities);
+                Log.i(TAG, "accessGoogleFit: " + weights);
+                Log.i(TAG, "accessGoogleFit: " + sleeps);
+            });
+        });
 
-        Fitness.getHistoryClient(this, GoogleSignIn.getLastSignedInAccount(this))
-                .readData(readRequest)
-                .addOnSuccessListener(dataReadResponse -> {
-                    for (Bucket bucket : dataReadResponse.getBuckets()) {
-                        for (DataSet dataSet : bucket.getDataSets()) {
-                            for (DataPoint dp : dataSet.getDataPoints()) {
-                                for (Field field : dp.getDataType().getFields()) {
-                                    Log.i(TAG, "Heart Rate: " + dp.getValue(field));
-                                }
-                            }
-                        }
-                    }
-                })
-                .addOnFailureListener(e -> Log.e(TAG, "onFailure()", e));
-
-        // pegar o aggregate de steps
-        readRequest = new DataReadRequest.Builder()
-                .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
-                .bucketByTime(1, TimeUnit.DAYS)
-                .setTimeRange(startSeconds, endSeconds, TimeUnit.SECONDS)
-                .build();
-
-        Fitness.getHistoryClient(this, GoogleSignIn.getLastSignedInAccount(this))
-                .readData(readRequest)
-                .addOnSuccessListener(dataReadResponse -> {
-                    for (Bucket bucket : dataReadResponse.getBuckets()) {
-                        for (DataSet dataSet : bucket.getDataSets()) {
-                            for (DataPoint dp : dataSet.getDataPoints()) {
-                                for (Field field : dp.getDataType().getFields()) {
-                                    Log.i(TAG, "Steps: " + dp.getValue(field));
-                                }
-                            }
-                        }
-                    }
-                })
-                .addOnFailureListener(e -> Log.e(TAG, "onFailure()", e));
-
-        // pegar o aggregate de activity
-        readRequest = new DataReadRequest.Builder()
-                .aggregate(DataType.TYPE_ACTIVITY_SEGMENT, DataType.AGGREGATE_ACTIVITY_SUMMARY)
-                .bucketByTime(1, TimeUnit.DAYS)
-                .setTimeRange(startSeconds, endSeconds, TimeUnit.SECONDS)
-                .build();
-
-        Fitness.getHistoryClient(this, GoogleSignIn.getLastSignedInAccount(this))
-                .readData(readRequest)
-                .addOnSuccessListener(dataReadResponse -> {
-                    for (Bucket bucket : dataReadResponse.getBuckets()) {
-                        for (DataSet dataSet : bucket.getDataSets()) {
-                            for (DataPoint dp : dataSet.getDataPoints()) {
-                                for (Field field : dp.getDataType().getFields()) {
-                                    Log.i(TAG, "Activity: " + dp.getValue(field));
-                                }
-                            }
-                        }
-                    }
-                })
-                .addOnFailureListener(e -> Log.e(TAG, "onFailure()", e));
     }
 }

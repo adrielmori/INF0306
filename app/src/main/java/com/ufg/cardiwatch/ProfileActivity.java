@@ -1,10 +1,8 @@
 package com.ufg.cardiwatch;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
-import java.util.Objects;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class ProfileActivity extends AppCompatActivity {
 
