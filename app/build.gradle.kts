@@ -54,5 +54,6 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     // mqtt
     implementation("com.hivemq:hivemq-mqtt-client:1.3.3")
-
+    // gson
+    implementation("com.google.code.gson:gson:2.10.1")
 }
