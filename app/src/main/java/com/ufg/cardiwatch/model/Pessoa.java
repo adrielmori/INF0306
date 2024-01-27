@@ -9,16 +9,18 @@ public class Pessoa implements Serializable {
     List<Sleep> sleeps;
     List<Step> steps;
     List<Weight> weights;
+    List<Calory> calories;
 
     public Pessoa() {
     }
 
-    public Pessoa(List<Activity> activities, List<HeartRate> heartRates, List<Sleep> sleeps, List<Step> steps, List<Weight> weights) {
+    public Pessoa(List<Activity> activities, List<HeartRate> heartRates, List<Sleep> sleeps, List<Step> steps, List<Weight> weights, List<Calory> calories) {
         this.activities = activities;
         this.heartRates = heartRates;
         this.sleeps = sleeps;
         this.steps = steps;
         this.weights = weights;
+        this.calories = calories;
     }
 
     public List<Activity> getActivities() {
@@ -61,6 +63,14 @@ public class Pessoa implements Serializable {
         this.weights = weights;
     }
 
+    public List<Calory> getCalories() {
+        return calories;
+    }
+
+    public void setCalories(List<Calory> calories) {
+        this.calories = calories;
+    }
+
     @Override
     public String toString() {
         return "Pessoa{" +
@@ -69,6 +79,7 @@ public class Pessoa implements Serializable {
                 ", sleeps=" + sleeps +
                 ", steps=" + steps +
                 ", weights=" + weights +
+                ", calories=" + calories +
                 '}';
     }
 }

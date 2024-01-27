@@ -2,6 +2,7 @@ package com.ufg.cardiwatch;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,16 +10,27 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.ufg.cardiwatch.model.Calory;
+import com.ufg.cardiwatch.model.Pessoa;
 import com.ufg.cardiwatch.util.Mqtt;
 
+import java.util.List;
 import java.util.Map;
 
 public class CaloriesActivity extends AppCompatActivity {
 
+    private Pessoa pessoa;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calories);
+
+        Intent intent = getIntent();
+        pessoa = (Pessoa) intent.getSerializableExtra("pessoa");
+
+        if (pessoa == null) {
+            pessoa = new Pessoa();
+        }
     }
 
     public void enviaParaMqtt(View view) {
@@ -30,19 +42,22 @@ public class CaloriesActivity extends AppCompatActivity {
         EditText sexta = (EditText) findViewById(R.id.editTextNumber6);
         EditText sabado = (EditText) findViewById(R.id.editTextNumber7);
 
-        Map<String, String> message = Map.of(
-                "Sunday", domingo.getText().toString(),
-                "Monday", segunda.getText().toString(),
-                "Tuesday", terca.getText().toString(),
-                "Wednesday", quarta.getText().toString(),
-                "Thursday", quinta.getText().toString(),
-                "Friday", sexta.getText().toString(),
-                "Saturday", sabado.getText().toString()
+        List<Calory> calories = List.of(
+                new Calory("Sunday", Float.parseFloat(domingo.getText().toString())),
+                new Calory("Monday", Float.parseFloat(segunda.getText().toString())),
+                new Calory("Tuesday", Float.parseFloat(terca.getText().toString())),
+                new Calory("Wednesday", Float.parseFloat(quarta.getText().toString())),
+                new Calory("Thursday", Float.parseFloat(quinta.getText().toString())),
+                new Calory("Friday", Float.parseFloat(sexta.getText().toString())),
+                new Calory("Saturday", Float.parseFloat(sabado.getText().toString()))
         );
 
-        Gson gson = new Gson();
-        String json = gson.toJson(message);
+        pessoa.setCalories(calories);
 
-        Mqtt.publishMessage("calorias", json);
+        Gson gson = new Gson();
+
+        String json = gson.toJson(pessoa);
+
+        Mqtt.publishMessage("messager", json);
     }
 }

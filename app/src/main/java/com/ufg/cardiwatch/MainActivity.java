@@ -77,13 +77,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void monitoringActivity(View view) {
         Intent intent = new Intent(this, MonitoryActivity.class);
-        // enviar pessoa
         intent.putExtra("pessoa", pessoa);
         startActivity(intent);
     }
 
     public void caloriesActivity(View view) {
         Intent intent = new Intent(this, CaloriesActivity.class);
+        intent.putExtra("pessoa", pessoa);
         startActivity(intent);
     }
 
