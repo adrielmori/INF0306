@@ -3,6 +3,7 @@ package com.ufg.cardiwatch;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.RequiresApi;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (pessoa.getWeights().size() > 0) {
             intent.putExtra("peso", pessoa.getWeights().get(pessoa.getWeights().size() - 1).getWeight().toString());
+            Log.d("peso", pessoa.getWeights().get(pessoa.getWeights().size() - 1).getWeight().toString());
         }
 
         startActivity(intent);
