@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.ufg.cardiwatch" >
+    package="com.ufg.cardiwatch">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -16,10 +16,12 @@
         android:theme="@style/Theme.CardiWatch"
         tools:targetApi="31">
         <activity
+            android:name=".CaloriesActivity"
+            android:exported="false" />
+        <activity
             android:name=".MonitoryActivity"
             android:exported="false"
-            android:parentActivityName=".MainActivity"
-            />
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ProfileActivity"
             android:exported="false"
