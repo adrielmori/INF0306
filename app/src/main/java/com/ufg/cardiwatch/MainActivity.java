@@ -80,6 +80,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void caloriesActivity(View view) {
+        Intent intent = new Intent(this, CaloriesActivity.class);
+        startActivity(intent);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
