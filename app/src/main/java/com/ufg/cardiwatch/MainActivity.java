@@ -65,7 +65,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void profileActivity(View view) {
         Intent intent = new Intent(this, ProfileActivity.class);
-        intent.putExtra("peso", pessoa.getWeights().get(pessoa.getWeights().size() - 1).getWeight().toString());
+
+        if (pessoa.getWeights().size() > 0) {
+            intent.putExtra("peso", pessoa.getWeights().get(pessoa.getWeights().size() - 1).getWeight().toString());
+        }
+
         startActivity(intent);
     }
 
@@ -74,6 +78,19 @@ public class MainActivity extends AppCompatActivity {
         // enviar pessoa
         intent.putExtra("pessoa", pessoa);
         startActivity(intent);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == 1) {
+            if (requestCode == 1) {
+                accessGoogleFit();
+            }
+        }
+
     }
 
 

@@ -2,6 +2,7 @@ package com.ufg.cardiwatch;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +16,10 @@ public class ProfileActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String message = intent.getStringExtra("peso");
+
+        if (message == null) {
+            message = "0";
+        }
 
         TextView textView = findViewById(R.id.textViewWeight);
         textView.setText(message + " kg");
