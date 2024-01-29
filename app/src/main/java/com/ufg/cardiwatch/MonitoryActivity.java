@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -37,10 +38,13 @@ public class MonitoryActivity extends AppCompatActivity {
     private WeightsChartHelper weightChartHelper;
     private BpmChartHelper bpmChartHelper;
     private SleepsChartHelper sleepChartHelper;
+
     // Plots Variables
     private BarChart barChart;
+    private HorizontalBarChart horizontalBarChartChart;
     private LineChart lineChart;
 
+    // API response get
     private String json;
     private String dataAPI;
 
@@ -57,11 +61,11 @@ public class MonitoryActivity extends AppCompatActivity {
         barChart = findViewById(R.id.barchart_steps);
         stepsChartHelper = new StepsChartHelper(barChart);
 
-        barChart = findViewById(R.id.barchart_act);
-        activitiesChartHelper = new ActivitiesChartHelper(barChart);
+        horizontalBarChartChart = findViewById(R.id.barchart_act);
+        activitiesChartHelper = new ActivitiesChartHelper(horizontalBarChartChart);
 
-        barChart = findViewById(R.id.barchart_weight);
-        weightChartHelper = new WeightsChartHelper(barChart);
+        lineChart = findViewById(R.id.barchart_weight);
+        weightChartHelper = new WeightsChartHelper(lineChart);
 
         barChart = findViewById(R.id.barchart_bpm);
         bpmChartHelper = new BpmChartHelper(barChart);
@@ -96,7 +100,7 @@ public class MonitoryActivity extends AppCompatActivity {
                 if (jsonObject.has("steps")) {
                     JSONArray stepsArray = jsonObject.getJSONArray("steps");
 
-                    Log.d("MonitoryActivity", "Valores para a chave steps -> " + stepsArray.toString());
+//                    Log.d("MonitoryActivity", "Valores para a chave steps -> " + stepsArray.toString());
                     stepsChartHelper.plotStepsChart(stepsArray);
                 }
 
@@ -106,28 +110,8 @@ public class MonitoryActivity extends AppCompatActivity {
                 if (jsonObject.has("activities")) {
                     JSONArray activitiesArray = jsonObject.getJSONArray("activities");
 
-                    Log.d("MonitoryActivity", "Valores para a chave activities -> " + activitiesArray.toString());
+//                    Log.d("MonitoryActivity", "Valores para a chave activities -> " + activitiesArray.toString());
                     activitiesChartHelper.plotActivityChart(activitiesArray);
-                }
-
-                /*
-                 * heartRates Chart
-                 * */
-                if (jsonObject.has("heartRates")) {
-                    JSONArray bpmArray = jsonObject.getJSONArray("heartRates");
-
-                    Log.d("MonitoryActivity", "Valores para a chave bpm -> " + bpmArray.toString());
-                    bpmChartHelper.plotBpmChart(bpmArray);
-                }
-
-                /*
-                 * sleeps Chart
-                 * */
-                if (jsonObject.has("sleeps")) {
-                    JSONArray sleepsArray = jsonObject.getJSONArray("sleeps");
-
-                    Log.d("MonitoryActivity", "Valores para a chave sleeps -> " + sleepsArray.toString());
-                    sleepChartHelper.plotSleepsChart(sleepsArray);
                 }
 
                 /*
@@ -139,6 +123,27 @@ public class MonitoryActivity extends AppCompatActivity {
                     Log.d("MonitoryActivity", "Valores para a chave weights -> " + weightsArray.toString());
                     weightChartHelper.plotWeightChart(weightsArray);
                 }
+
+                /*
+                 * heartRates Chart
+                 * */
+                if (jsonObject.has("heartRates")) {
+                    JSONArray bpmArray = jsonObject.getJSONArray("heartRates");
+
+//                    Log.d("MonitoryActivity", "Valores para a chave bpm -> " + bpmArray.toString());
+                    bpmChartHelper.plotBpmChart(bpmArray);
+                }
+
+                /*
+                 * sleeps Chart
+                 * */
+                if (jsonObject.has("sleeps")) {
+                    JSONArray sleepsArray = jsonObject.getJSONArray("sleeps");
+
+//                    Log.d("MonitoryActivity", "Valores para a chave sleeps -> " + sleepsArray.toString());
+                    sleepChartHelper.plotSleepsChart(sleepsArray);
+                }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
