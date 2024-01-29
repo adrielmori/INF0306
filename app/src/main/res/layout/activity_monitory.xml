@@ -55,6 +55,33 @@
             android:layout_width="match_parent"
             android:layout_height="300dp" />
 
+        <!-- BarChart 3 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sleeps Score by Day"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/barchart_sleeps"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BPM"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/barchart_bpm"
+            android:layout_width="match_parent"
+            android:layout_height="211dp" />
+
         <!-- Adicione mais TextViews e BarCharts conforme necessário -->
 
         <Button

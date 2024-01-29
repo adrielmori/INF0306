@@ -8,13 +8,16 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.google.gson.Gson;
 import com.ufg.cardiwatch.model.Pessoa;
 import com.ufg.cardiwatch.util.ActivitiesChartHelper;
+import com.ufg.cardiwatch.util.BpmChartHelper;
 import com.ufg.cardiwatch.util.Mqtt;
+import com.ufg.cardiwatch.util.SleepsChartHelper;
 import com.ufg.cardiwatch.util.StepsChartHelper;
 import com.ufg.cardiwatch.util.WeightsChartHelper;
 
@@ -32,12 +35,11 @@ public class MonitoryActivity extends AppCompatActivity {
     private StepsChartHelper stepsChartHelper;
     private ActivitiesChartHelper activitiesChartHelper;
     private WeightsChartHelper weightChartHelper;
-
+    private BpmChartHelper bpmChartHelper;
+    private SleepsChartHelper sleepChartHelper;
     // Plots Variables
     private BarChart barChart;
-    private BarData barData;
-    private BarDataSet barDataSet;
-    ArrayList<BarEntry> barentries;
+    private LineChart lineChart;
 
     private String json;
     private String dataAPI;
@@ -60,6 +62,12 @@ public class MonitoryActivity extends AppCompatActivity {
 
         barChart = findViewById(R.id.barchart_weight);
         weightChartHelper = new WeightsChartHelper(barChart);
+
+        barChart = findViewById(R.id.barchart_bpm);
+        bpmChartHelper = new BpmChartHelper(barChart);
+
+        barChart = findViewById(R.id.barchart_sleeps);
+        sleepChartHelper = new SleepsChartHelper(barChart);
 
         dataAPI = getChartsFromAPI(pessoa);
         listKeysFromJson(dataAPI);
@@ -109,7 +117,7 @@ public class MonitoryActivity extends AppCompatActivity {
                     JSONArray bpmArray = jsonObject.getJSONArray("heartRates");
 
                     Log.d("MonitoryActivity", "Valores para a chave bpm -> " + bpmArray.toString());
-//                    activitiesChartHelper.plotActivityChart(activitiesArray);
+                    bpmChartHelper.plotBpmChart(bpmArray);
                 }
 
                 /*
@@ -119,7 +127,7 @@ public class MonitoryActivity extends AppCompatActivity {
                     JSONArray sleepsArray = jsonObject.getJSONArray("sleeps");
 
                     Log.d("MonitoryActivity", "Valores para a chave sleeps -> " + sleepsArray.toString());
-//                    activitiesChartHelper.plotActivityChart(activitiesArray);
+                    sleepChartHelper.plotSleepsChart(sleepsArray);
                 }
 
                 /*
