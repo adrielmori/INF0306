@@ -23,6 +23,7 @@ public class WeightsChartHelper {
 
     public WeightsChartHelper(BarChart barChart) {
         this.barchart_weight = barChart;
+        this.barchart_weight.getDescription().setEnabled(false);
     }
 
     public void plotWeightChart(JSONArray weightArray) {
@@ -35,6 +36,11 @@ public class WeightsChartHelper {
         HashMap<Integer, Float> weightMap = new HashMap<>();
 
         try {
+            // Exclua o primeiro valor
+            if (weightArray.length() > 0) {
+                weightArray.remove(0);
+            }
+
             for (int i = 0; i < weightArray.length(); i++) {
                 JSONObject weightObject = weightArray.getJSONObject(i);
 
@@ -66,6 +72,7 @@ public class WeightsChartHelper {
 
         return weightEntries;
     }
+
 
 
     private void plotBarChart(ArrayList<BarEntry> stepsEntries) {

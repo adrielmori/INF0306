@@ -28,6 +28,7 @@ public class SleepsChartHelper {
 
     public SleepsChartHelper(LineChart lineChart) {
         this.linechart_sleeps = lineChart;
+        this.linechart_sleeps.getDescription().setEnabled(false);
     }
 
     public void plotSleepsChart(JSONArray sleepsArray) {

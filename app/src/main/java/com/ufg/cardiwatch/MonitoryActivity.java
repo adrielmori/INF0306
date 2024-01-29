@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.BarData;
@@ -42,6 +43,7 @@ public class MonitoryActivity extends AppCompatActivity {
     private BarChart barChart;
     private HorizontalBarChart horizontalBarChartChart;
     private LineChart lineChart;
+    private CombinedChart combinedChart;
 
     // API response get
     private String json;
@@ -66,8 +68,8 @@ public class MonitoryActivity extends AppCompatActivity {
         barChart = findViewById(R.id.barchart_weight);
         weightChartHelper = new WeightsChartHelper(barChart);
 
-        barChart = findViewById(R.id.barchart_bpm);
-        bpmChartHelper = new BpmChartHelper(barChart);
+        lineChart = findViewById(R.id.barchart_bpm);
+        bpmChartHelper = new BpmChartHelper(lineChart);
 
         lineChart = findViewById(R.id.barchart_sleeps);
         sleepChartHelper = new SleepsChartHelper(lineChart);
