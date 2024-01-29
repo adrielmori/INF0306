@@ -16,6 +16,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         multiDexEnabled = true
+
     }
 
 
@@ -61,5 +62,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     // Plotes values
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation("com.jakewharton.threetenabp:threetenabp:1.3.1")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
     //
 }

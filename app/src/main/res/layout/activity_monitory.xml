@@ -13,30 +13,49 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- BarChart 1 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Steps by Day"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+
         <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/barchart"
+            android:id="@+id/barchart_steps"
             android:layout_width="match_parent"
             android:layout_height="300dp" />
 
+        <!-- BarChart 2 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Activity Intese by Day"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+
         <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/barchart2"
+            android:id="@+id/barchart_act"
+            android:layout_width="match_parent"
+            android:layout_height="163dp" />
+
+        <!-- BarChart 3 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Weight by Day"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/barchart_weight"
             android:layout_width="match_parent"
             android:layout_height="300dp" />
 
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/barchart3"
-            android:layout_width="match_parent"
-            android:layout_height="300dp" />
-
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/barchart4"
-            android:layout_width="match_parent"
-            android:layout_height="300dp" />
-
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/barchart5"
-            android:layout_width="match_parent"
-            android:layout_height="300dp" />
+        <!-- Adicione mais TextViews e BarCharts conforme necessário -->
 
         <Button
             android:id="@+id/button2"

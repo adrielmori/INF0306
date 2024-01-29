@@ -1,51 +1,46 @@
 package com.ufg.cardiwatch;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.SeekBar;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.gson.Gson;
 import com.ufg.cardiwatch.model.Pessoa;
+import com.ufg.cardiwatch.util.ActivitiesChartHelper;
 import com.ufg.cardiwatch.util.Mqtt;
 import com.ufg.cardiwatch.util.StepsChartHelper;
+import com.ufg.cardiwatch.util.WeightsChartHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class MonitoryActivity extends AppCompatActivity {
 
     Pessoa pessoa = new Pessoa();
+
     private StepsChartHelper stepsChartHelper;
+    private ActivitiesChartHelper activitiesChartHelper;
+    private WeightsChartHelper weightChartHelper;
 
     // Plots Variables
     private BarChart barChart;
     private BarData barData;
     private BarDataSet barDataSet;
+    ArrayList<BarEntry> barentries;
 
     private String json;
-
     private String dataAPI;
-
-    ArrayList<BarEntry> barentries;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,31 +52,19 @@ public class MonitoryActivity extends AppCompatActivity {
         pessoa = (Pessoa) intent.getSerializableExtra("pessoa");
 
         // getData Logic Implementation
-        barChart = findViewById(R.id.barchart);
+        barChart = findViewById(R.id.barchart_steps);
         stepsChartHelper = new StepsChartHelper(barChart);
 
+        barChart = findViewById(R.id.barchart_act);
+        activitiesChartHelper = new ActivitiesChartHelper(barChart);
+
+        barChart = findViewById(R.id.barchart_weight);
+        weightChartHelper = new WeightsChartHelper(barChart);
+
         dataAPI = getChartsFromAPI(pessoa);
+        listKeysFromJson(dataAPI);
 
         Log.d("MonitoryActivity", "Enviando JSON para MQTT: " + dataAPI);
-
-        getData();
-        barChart = findViewById(R.id.barchart2);
-
-        barDataSet = new BarDataSet(barentries, "Data set");
-        barData = new BarData(barDataSet);
-        barChart.setData(barData);
-
-        barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
-        barDataSet.setValueTextColor(Color.BLACK);
-        barDataSet.setValueTextSize(18f);
-    }
-    private void getData() {
-        barentries = new ArrayList<>();
-        barentries.add(new BarEntry(1f, 2));
-        barentries.add(new BarEntry(2f, 3));
-        barentries.add(new BarEntry(5f, 7));
-        barentries.add(new BarEntry(6f, 10));
-        barentries.add(new BarEntry(7f, 13));
     }
 
     private String getChartsFromAPI(Pessoa pessoa) {
@@ -92,19 +75,61 @@ public class MonitoryActivity extends AppCompatActivity {
         if (json != null) {
             try {
                 JSONObject jsonObject = new JSONObject(json);
+                Iterator<String> keys = jsonObject.keys();
 
-                //Plotes para os passos
+                while(keys.hasNext()) {
+                    String key = keys.next();
+                    Log.d("MonitoryActivity", key);
+                }
+
+                /*
+                 * Steps Chart
+                 * */
                 if (jsonObject.has("steps")) {
                     JSONArray stepsArray = jsonObject.getJSONArray("steps");
 
-                    // Usar a classe StepsChartHelper para plotar o gráfico
+                    Log.d("MonitoryActivity", "Valores para a chave steps -> " + stepsArray.toString());
                     stepsChartHelper.plotStepsChart(stepsArray);
                 }
-                if (jsonObject.has("steps")) {
-                    JSONArray stepsArray = jsonObject.getJSONArray("steps");
 
-                    // Usar a classe StepsChartHelper para plotar o gráfico
-                    stepsChartHelper.plotStepsChart(stepsArray);
+                /*
+                 * Activity Chart
+                 * */
+                if (jsonObject.has("activities")) {
+                    JSONArray activitiesArray = jsonObject.getJSONArray("activities");
+
+                    Log.d("MonitoryActivity", "Valores para a chave activities -> " + activitiesArray.toString());
+                    activitiesChartHelper.plotActivityChart(activitiesArray);
+                }
+
+                /*
+                 * heartRates Chart
+                 * */
+                if (jsonObject.has("heartRates")) {
+                    JSONArray bpmArray = jsonObject.getJSONArray("heartRates");
+
+                    Log.d("MonitoryActivity", "Valores para a chave bpm -> " + bpmArray.toString());
+//                    activitiesChartHelper.plotActivityChart(activitiesArray);
+                }
+
+                /*
+                 * sleeps Chart
+                 * */
+                if (jsonObject.has("sleeps")) {
+                    JSONArray sleepsArray = jsonObject.getJSONArray("sleeps");
+
+                    Log.d("MonitoryActivity", "Valores para a chave sleeps -> " + sleepsArray.toString());
+//                    activitiesChartHelper.plotActivityChart(activitiesArray);
+                }
+
+                /*
+                 * weights Chart
+                 * */
+                if (jsonObject.has("weights")) {
+                    JSONArray weightsArray = jsonObject.getJSONArray("weights");
+
+                    Log.d("MonitoryActivity", "Valores para a chave weights -> " + weightsArray.toString());
+                    weightChartHelper.plotWeightChart(weightsArray);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -122,5 +147,29 @@ public class MonitoryActivity extends AppCompatActivity {
         Log.d("MonitoryActivity", "Enviando JSON para MQTT: " + json);
 
         Mqtt.publishMessage("cardiwatch", json);
+    }
+
+    private void listKeysFromJson(String jsonData) {
+        try {
+            if (jsonData != null) {
+                JSONObject jsonObject = new JSONObject(jsonData);
+
+                Iterator<String> keys = jsonObject.keys();
+                while (keys.hasNext()) {
+                    String key = keys.next();
+                    Log.d("MonitoryActivity", "Chave: " + key);
+
+                    // Se o valor associado à chave for outro objeto JSON, você pode
+                    // chamar recursivamente esta função para listar as chaves desse objeto.
+                    if (jsonObject.get(key) instanceof JSONObject) {
+                        listKeysFromJson(jsonObject.get(key).toString());
+                    }
+                }
+            } else {
+                Log.d("MonitoryActivity", "A string JSON está nula.");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
