@@ -41,7 +41,7 @@ public class BpmChartHelper {
                 float bpmLevel = (float) bpmObject.getDouble("bpm");
 
                 bpmEntries.add(new BarEntry(day, bpmLevel));
-                Log.d("MonitoryActivity", "Dia: " + day + ", BPM: " + bpmLevel);
+//                Log.d("MonitoryActivity", "Dia: " + day + ", BPM: " + bpmLevel);
 
             }
 

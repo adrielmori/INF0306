@@ -3,11 +3,11 @@ package com.ufg.cardiwatch.util;
 import android.graphics.Color;
 import android.util.Log;
 
-import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.json.JSONArray;
@@ -15,21 +15,29 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.charts.LineChart;
 
 public class SleepsChartHelper {
-    private BarChart barchart_sleeps;
+    private LineChart linechart_sleeps;
 
-    public SleepsChartHelper(BarChart barChart) {
-        this.barchart_sleeps = barChart;
+    public SleepsChartHelper(LineChart lineChart) {
+        this.linechart_sleeps = lineChart;
     }
 
     public void plotSleepsChart(JSONArray sleepsArray) {
-        ArrayList<BarEntry> sleepsEntries = parseSleepsDataFromJson(sleepsArray);
-        plotBarChart(sleepsEntries);
+        ArrayList<Entry> sleepsEntries = parseSleepsDataFromJson(sleepsArray);
+        plotLineChart(sleepsEntries);
     }
 
-    private ArrayList<BarEntry> parseSleepsDataFromJson(JSONArray sleepsArray) {
-        ArrayList<BarEntry> sleepsEntries = new ArrayList<>();
+    private ArrayList<Entry> parseSleepsDataFromJson(JSONArray sleepsArray) {
+        ArrayList<Entry> sleepsEntries = new ArrayList<>();
+        int hour = 0;
 
         try {
             for (int i = 0; i < sleepsArray.length(); i++) {
@@ -38,9 +46,14 @@ public class SleepsChartHelper {
                 int day = stepObject.getInt("day");
                 int sleeps = stepObject.getInt("sleep");
 
-                sleepsEntries.add(new BarEntry(day, sleeps));
+                // Adicione horas ao dia
+                float dayInHours = day * 24f + hour;
+                sleepsEntries.add(new Entry(dayInHours, sleeps));
 
-                Log.d("MonitoryActivity", "Dia: " + day + ", Passos: " + sleeps);
+                Log.d("MonitoryActivity", "Hora: " + dayInHours + ", Sleep Score: " + sleeps);
+
+                // Atualize a hora
+                hour = (hour + 1) % 24;
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -49,21 +62,21 @@ public class SleepsChartHelper {
         return sleepsEntries;
     }
 
-    private void plotBarChart(ArrayList<BarEntry> sleepsEntries) {
-        BarDataSet barDataSet = new BarDataSet(sleepsEntries, "Quality of Sleep Score");
-        BarData barData = new BarData(barDataSet);
-        barchart_sleeps.setData(barData);
+    private void plotLineChart(ArrayList<Entry> sleepsEntries) {
+        LineDataSet lineDataSet = new LineDataSet(sleepsEntries, "Quality of Sleep Score");
+        LineData lineData = new LineData(lineDataSet);
+        linechart_sleeps.setData(lineData);
 
-        barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
-        barDataSet.setValueTextColor(Color.BLACK);
+        lineDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+        lineDataSet.setValueTextColor(Color.BLACK);
         // Ajuste o tamanho da fonte dos números
-        barDataSet.setValueTextSize(12f);  // Altere o valor conforme necessário
+        lineDataSet.setValueTextSize(12f);  // Altere o valor conforme necessário
 
-        // Ajuste o tamanho da fonte dos valores nas barras (opcional)
-        barData.setValueTextSize(12f);  // Altere o valor conforme necessário
+        // Ajuste o tamanho da fonte dos valores nas linhas (opcional)
+        lineData.setValueTextSize(12f);  // Altere o valor conforme necessário
 
         // Ajuste o tamanho da fonte da legenda (opcional)
-        Legend legend = barchart_sleeps.getLegend();
+        Legend legend = linechart_sleeps.getLegend();
         legend.setTextSize(12f);  // Altere o valor conforme necessário
     }
 }

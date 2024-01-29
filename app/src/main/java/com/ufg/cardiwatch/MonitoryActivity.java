@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -39,8 +40,10 @@ public class MonitoryActivity extends AppCompatActivity {
     private SleepsChartHelper sleepChartHelper;
     // Plots Variables
     private BarChart barChart;
+    private HorizontalBarChart horizontalBarChartChart;
     private LineChart lineChart;
 
+    // API response get
     private String json;
     private String dataAPI;
 
@@ -57,8 +60,8 @@ public class MonitoryActivity extends AppCompatActivity {
         barChart = findViewById(R.id.barchart_steps);
         stepsChartHelper = new StepsChartHelper(barChart);
 
-        barChart = findViewById(R.id.barchart_act);
-        activitiesChartHelper = new ActivitiesChartHelper(barChart);
+        horizontalBarChartChart = findViewById(R.id.barchart_act);
+        activitiesChartHelper = new ActivitiesChartHelper(horizontalBarChartChart);
 
         barChart = findViewById(R.id.barchart_weight);
         weightChartHelper = new WeightsChartHelper(barChart);
@@ -66,8 +69,8 @@ public class MonitoryActivity extends AppCompatActivity {
         barChart = findViewById(R.id.barchart_bpm);
         bpmChartHelper = new BpmChartHelper(barChart);
 
-        barChart = findViewById(R.id.barchart_sleeps);
-        sleepChartHelper = new SleepsChartHelper(barChart);
+        lineChart = findViewById(R.id.barchart_sleeps);
+        sleepChartHelper = new SleepsChartHelper(lineChart);
 
         dataAPI = getChartsFromAPI(pessoa);
         listKeysFromJson(dataAPI);
@@ -87,7 +90,17 @@ public class MonitoryActivity extends AppCompatActivity {
 
                 while(keys.hasNext()) {
                     String key = keys.next();
-                    Log.d("MonitoryActivity", key);
+//                    Log.d("MonitoryActivity", key);
+                }
+
+                /*
+                 * weights Chart
+                 * */
+                if (jsonObject.has("weights")) {
+                    JSONArray weightsArray = jsonObject.getJSONArray("weights");
+
+//                    Log.d("MonitoryActivity", "Valores para a chave weights -> " + weightsArray.toString());
+                    weightChartHelper.plotWeightChart(weightsArray);
                 }
 
                 /*
@@ -96,7 +109,7 @@ public class MonitoryActivity extends AppCompatActivity {
                 if (jsonObject.has("steps")) {
                     JSONArray stepsArray = jsonObject.getJSONArray("steps");
 
-                    Log.d("MonitoryActivity", "Valores para a chave steps -> " + stepsArray.toString());
+//                    Log.d("MonitoryActivity", "Valores para a chave steps -> " + stepsArray.toString());
                     stepsChartHelper.plotStepsChart(stepsArray);
                 }
 
@@ -106,18 +119,8 @@ public class MonitoryActivity extends AppCompatActivity {
                 if (jsonObject.has("activities")) {
                     JSONArray activitiesArray = jsonObject.getJSONArray("activities");
 
-                    Log.d("MonitoryActivity", "Valores para a chave activities -> " + activitiesArray.toString());
+//                    Log.d("MonitoryActivity", "Valores para a chave activities -> " + activitiesArray.toString());
                     activitiesChartHelper.plotActivityChart(activitiesArray);
-                }
-
-                /*
-                 * heartRates Chart
-                 * */
-                if (jsonObject.has("heartRates")) {
-                    JSONArray bpmArray = jsonObject.getJSONArray("heartRates");
-
-                    Log.d("MonitoryActivity", "Valores para a chave bpm -> " + bpmArray.toString());
-                    bpmChartHelper.plotBpmChart(bpmArray);
                 }
 
                 /*
@@ -129,16 +132,17 @@ public class MonitoryActivity extends AppCompatActivity {
                     Log.d("MonitoryActivity", "Valores para a chave sleeps -> " + sleepsArray.toString());
                     sleepChartHelper.plotSleepsChart(sleepsArray);
                 }
-
                 /*
-                 * weights Chart
+                 * heartRates Chart
                  * */
-                if (jsonObject.has("weights")) {
-                    JSONArray weightsArray = jsonObject.getJSONArray("weights");
+                if (jsonObject.has("heartRates")) {
+                    JSONArray bpmArray = jsonObject.getJSONArray("heartRates");
 
-                    Log.d("MonitoryActivity", "Valores para a chave weights -> " + weightsArray.toString());
-                    weightChartHelper.plotWeightChart(weightsArray);
+//                    Log.d("MonitoryActivity", "Valores para a chave bpm -> " + bpmArray.toString());
+                    bpmChartHelper.plotBpmChart(bpmArray);
                 }
+
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }

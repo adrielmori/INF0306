@@ -51,8 +51,6 @@ public class WeightsChartHelper {
                     // Se não existe uma entrada para o dia, adicione ao mapa
                     weightMap.put(day, weightLevel);
                 }
-
-                Log.d("MonitoryActivity", "Dia: " + day + ", Peso: " + weightLevel);
             }
 
             // Converter o mapa para entradas do gráfico

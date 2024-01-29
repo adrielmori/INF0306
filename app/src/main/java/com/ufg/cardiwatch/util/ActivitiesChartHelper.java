@@ -3,7 +3,7 @@ package com.ufg.cardiwatch.util;
 import android.graphics.Color;
 import android.util.Log;
 
-import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -19,10 +19,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ActivitiesChartHelper {
-    private BarChart barChart_act;
+    private HorizontalBarChart horizontalBarChart_act;
 
-    public ActivitiesChartHelper(BarChart barChart) {
-        this.barChart_act = barChart;
+    public ActivitiesChartHelper(HorizontalBarChart horizontalBarChart) {
+        this.horizontalBarChart_act = horizontalBarChart;
+        this.horizontalBarChart_act.getDescription().setEnabled(false);
     }
 
     public void plotActivityChart(JSONArray activitiesArray) {
@@ -51,8 +52,6 @@ public class ActivitiesChartHelper {
                     // Se não existe uma entrada para o dia, adicione ao mapa
                     activityMap.put(day, activityLevel);
                 }
-
-                Log.d("MonitoryActivity", "Dia: " + day + ", Nível de Atividade: " + activityLevel);
             }
 
             // Converter o mapa para entradas do gráfico
@@ -69,22 +68,24 @@ public class ActivitiesChartHelper {
         return activitiesEntries;
     }
 
-
-    private void plotBarChart(ArrayList<BarEntry> stepsEntries) {
-        BarDataSet barDataSet = new BarDataSet(stepsEntries, "Meta de Atividade");
+    private void plotBarChart(ArrayList<BarEntry> activitiesEntries) {
+        BarDataSet barDataSet = new BarDataSet(activitiesEntries, "Activiteis Goal (0-bad --- 108-good)");
         BarData barData = new BarData(barDataSet);
-        barChart_act.setData(barData);
+        horizontalBarChart_act.setData(barData);
 
         barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
         barDataSet.setValueTextColor(Color.BLACK);
         // Ajuste o tamanho da fonte dos números
-        barDataSet.setValueTextSize(12f);  // Altere o valor conforme necessário
+        barDataSet.setValueTextSize(8f);  // Altere o valor conforme necessário
 
         // Ajuste o tamanho da fonte dos valores nas barras (opcional)
-        barData.setValueTextSize(12f);  // Altere o valor conforme necessário
+        barData.setValueTextSize(8f);  // Altere o valor conforme necessário
 
         // Ajuste o tamanho da fonte da legenda (opcional)
-        Legend legend = barChart_act.getLegend();
-        legend.setTextSize(12f);  // Altere o valor conforme necessário
+        Legend legend = horizontalBarChart_act.getLegend();
+        legend.setTextSize(8f);  // Altere o valor conforme necessário
+
+        // Desativar a exibição de valores dentro das barras
+        barDataSet.setDrawValues(false);
     }
 }
