@@ -16,6 +16,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -56,4 +57,7 @@ dependencies {
     implementation("com.hivemq:hivemq-mqtt-client:1.3.3")
     // gson
     implementation("com.google.code.gson:gson:2.10.1")
+    // Plotes values
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    //
 }
