@@ -14,6 +14,17 @@ public class Pessoa implements Serializable {
     private List<Weight> weights_predict;
 
     public Pessoa() {
+        List<Calory> calories = List.of(
+                new Calory("Sunday", 0f),
+                new Calory("Monday", 0f),
+                new Calory("Tuesday", 0f),
+                new Calory("Wednesday", 0f),
+                new Calory("Thursday", 0f),
+                new Calory("Friday", 0f),
+                new Calory("Saturday", 0f)
+        );
+
+        this.calories = calories;
     }
 
     public Pessoa(List<Activity> activities, List<HeartRate> heartRates, List<Sleep> sleeps, List<Step> steps, List<Weight> weights, List<Calory> calories,  List<WeekHorizon> week_horizon, List<Weight> weights_predict) {

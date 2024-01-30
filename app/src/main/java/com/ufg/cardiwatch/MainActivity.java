@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-//        Mqtt.sendSubscriptionSendNotification("cardiwatch_request", this, manager);
+        Mqtt.sendSubscriptionSendNotification("cardiwatch_request", this, manager);
         sendSubscriptionSendColocaPesosPreditos("cardiwatch_request", this);
     }
 

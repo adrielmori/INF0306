@@ -39,7 +39,7 @@
                 android:ems="10"
                 android:gravity="right"
                 android:inputType="number"
-                android:text="0"
+                android:text="4000"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -64,7 +64,7 @@
                 android:ems="10"
                 android:gravity="right"
                 android:inputType="number"
-                android:text="0"
+                android:text="3000"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -89,7 +89,7 @@
                 android:ems="10"
                 android:gravity="right"
                 android:inputType="number"
-                android:text="0"
+                android:text="3000"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -114,7 +114,7 @@
                 android:ems="10"
                 android:gravity="right"
                 android:inputType="number"
-                android:text="0"
+                android:text="3000"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -139,7 +139,7 @@
                 android:ems="10"
                 android:gravity="right"
                 android:inputType="number"
-                android:text="0"
+                android:text="3000"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -164,7 +164,7 @@
                 android:ems="10"
                 android:gravity="right"
                 android:inputType="number"
-                android:text="0"
+                android:text="3200"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -189,7 +189,7 @@
                 android:ems="10"
                 android:gravity="right"
                 android:inputType="number"
-                android:text="0"
+                android:text="4000"
                 android:textSize="14sp" />
 
         </LinearLayout>

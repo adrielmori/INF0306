@@ -139,7 +139,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:text="100 kg" />
+                    android:text="110 kg" />
 
             </LinearLayout>
 
