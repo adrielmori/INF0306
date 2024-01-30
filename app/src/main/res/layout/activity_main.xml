@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
     android:onClick="monitoringActivity"
     tools:context=".MainActivity">
 
@@ -14,16 +13,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
-        <TextView
-            android:id="@+id/txtCardi"
-            android:layout_width="wrap_content"
-            android:layout_height="47dp"
-            android:layout_margin="42dp"
-            android:fontFamily="@font/googlesans_bold"
-            android:text="CardiWatch"
-            android:textColor="@color/white"
-            android:textSize="42sp" />
 
         <GridLayout
             android:layout_width="376dp"
@@ -64,7 +53,6 @@
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/googlesans_bold"
                         android:text="Digital Twin"
-                        android:textColor="@color/white"
                         android:textSize="18sp" />
 
                 </LinearLayout>
@@ -78,7 +66,6 @@
                 android:layout_margin="10dp"
                 android:clickable="true"
                 android:onClick="profileActivity"
-                app:cardBackgroundColor="@color/gray"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="5dp">
 
@@ -100,7 +87,6 @@
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/googlesans_bold"
                         android:text="Profile"
-                        android:textColor="@color/white"
                         android:textSize="18sp" />
 
                 </LinearLayout>
@@ -112,7 +98,6 @@
                 android:layout_height="170dp"
                 android:layout_margin="10dp"
                 android:onClick="monitoringActivity"
-                app:cardBackgroundColor="@color/gray"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="5dp">
 
@@ -134,7 +119,6 @@
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/googlesans_bold"
                         android:text="Monitoring"
-                        android:textColor="@color/white"
                         android:textSize="18sp" />
 
                 </LinearLayout>
@@ -145,7 +129,6 @@
                 android:layout_width="170dp"
                 android:layout_height="170dp"
                 android:layout_margin="10dp"
-                app:cardBackgroundColor="@color/gray"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="5dp">
 
@@ -167,7 +150,6 @@
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/googlesans_bold"
                         android:text="Medical"
-                        android:textColor="@color/white"
                         android:textSize="18sp" />
 
                 </LinearLayout>
@@ -179,7 +161,6 @@
                 android:layout_height="170dp"
                 android:layout_margin="10dp"
                 android:onClick="caloriesActivity"
-                app:cardBackgroundColor="@color/gray"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="5dp">
 
@@ -201,7 +182,6 @@
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/googlesans_bold"
                         android:text="Calories"
-                        android:textColor="@color/white"
                         android:textSize="18sp" />
 
                 </LinearLayout>
@@ -212,7 +192,6 @@
                 android:layout_width="170dp"
                 android:layout_height="170dp"
                 android:layout_margin="10dp"
-                app:cardBackgroundColor="@color/gray"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="5dp">
 
@@ -234,7 +213,6 @@
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/googlesans_bold"
                         android:text="Gym"
-                        android:textColor="@color/white"
                         android:textSize="18sp" />
 
                 </LinearLayout>
@@ -245,7 +223,6 @@
                 android:layout_width="170dp"
                 android:layout_height="170dp"
                 android:layout_margin="10dp"
-                app:cardBackgroundColor="@color/gray"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="5dp">
 
@@ -267,7 +244,6 @@
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/googlesans_bold"
                         android:text="Settings"
-                        android:textColor="@color/white"
                         android:textSize="18sp" />
 
                 </LinearLayout>
@@ -278,7 +254,6 @@
                 android:layout_width="170dp"
                 android:layout_height="170dp"
                 android:layout_margin="10dp"
-                app:cardBackgroundColor="@color/gray"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="5dp">
 
@@ -300,7 +275,6 @@
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/googlesans_bold"
                         android:text="Delete"
-                        android:textColor="@color/white"
                         android:textSize="18sp" />
 
                 </LinearLayout>
