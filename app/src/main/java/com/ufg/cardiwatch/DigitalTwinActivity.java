@@ -13,7 +13,10 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.ufg.cardiwatch.model.Pessoa;
+import com.ufg.cardiwatch.model.WeekHorizon;
 import com.ufg.cardiwatch.util.Mqtt;
+
+import java.util.List;
 
 public class DigitalTwinActivity extends AppCompatActivity {
 
@@ -49,7 +52,9 @@ public class DigitalTwinActivity extends AppCompatActivity {
         Spinner spinner = findViewById(R.id.spinner);
         String week = spinner.getSelectedItem().toString();
 
-        pessoa.setWeek_horizon(Integer.parseInt(week.substring(0, 1)));
+        List<WeekHorizon> weekHorizon = List.of(new WeekHorizon(Integer.parseInt(week.substring(0, 1))));
+
+        pessoa.setWeek_horizon(weekHorizon);
 
         Gson gson = new Gson();
         String json = gson.toJson(pessoa);

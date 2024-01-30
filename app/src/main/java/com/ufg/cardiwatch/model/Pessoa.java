@@ -10,12 +10,12 @@ public class Pessoa implements Serializable {
     private List<Step> steps;
     private List<Weight> weights;
     private List<Calory> calories;
-    private Integer week_horizon;
+    private List<WeekHorizon> week_horizon;
 
     public Pessoa() {
     }
 
-    public Pessoa(List<Activity> activities, List<HeartRate> heartRates, List<Sleep> sleeps, List<Step> steps, List<Weight> weights, List<Calory> calories, Integer week_horizon) {
+    public Pessoa(List<Activity> activities, List<HeartRate> heartRates, List<Sleep> sleeps, List<Step> steps, List<Weight> weights, List<Calory> calories,  List<WeekHorizon> week_horizon) {
         this.activities = activities;
         this.heartRates = heartRates;
         this.sleeps = sleeps;
@@ -25,11 +25,11 @@ public class Pessoa implements Serializable {
         this.week_horizon = week_horizon;
     }
 
-    public Integer getWeek_horizon() {
+    public List<WeekHorizon> getWeek_horizon() {
         return week_horizon;
     }
 
-    public void setWeek_horizon(Integer week_horizon) {
+    public void setWeek_horizon(List<WeekHorizon> week_horizon) {
         this.week_horizon = week_horizon;
     }
 
