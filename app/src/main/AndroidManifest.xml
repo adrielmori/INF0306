@@ -16,6 +16,10 @@
         android:theme="@style/Theme.CardiWatch"
         tools:targetApi="31">
         <activity
+            android:name=".DigitalTwinActivity"
+            android:exported="false" 
+            android:parentActivityName=".MainActivity" />
+        <activity
             android:name=".CaloriesActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity" />
