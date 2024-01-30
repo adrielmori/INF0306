@@ -85,6 +85,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void digitalTwinActivity(View view) {
+        Intent intent = new Intent(this, DigitalTwinActivity.class);
+        intent.putExtra("pessoa", pessoa);
+        startActivity(intent);
+    }
+
     public void monitoringActivity(View view) {
         Intent intent = new Intent(this, MonitoryActivity.class);
         intent.putExtra("pessoa", pessoa);

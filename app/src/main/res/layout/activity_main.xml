@@ -31,7 +31,6 @@
                 android:layout_margin="10dp"
                 android:clickable="true"
                 android:onClick="digitalTwinActivity"
-                app:cardBackgroundColor="@color/gray"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="5dp">
 
