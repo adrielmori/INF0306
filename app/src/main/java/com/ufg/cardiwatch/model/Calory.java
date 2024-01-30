@@ -1,6 +1,8 @@
 package com.ufg.cardiwatch.model;
 
-public class Calory {
+import java.io.Serializable;
+
+public class Calory implements Serializable {
     private String weyDay;
     private Float colorie;
 

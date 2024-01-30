@@ -1,21 +1,16 @@
 package com.ufg.cardiwatch;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import com.google.gson.Gson;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.ufg.cardiwatch.model.Calory;
 import com.ufg.cardiwatch.model.Pessoa;
-import com.ufg.cardiwatch.util.Mqtt;
 
 import java.util.List;
-import java.util.Map;
 
 public class CaloriesActivity extends AppCompatActivity {
 
@@ -33,7 +28,7 @@ public class CaloriesActivity extends AppCompatActivity {
         }
     }
 
-    public void enviaParaMqtt(View view) {
+    public void enviaParaTelaPrincipal(View view) {
         EditText domingo = (EditText) findViewById(R.id.editTextNumber);
         EditText segunda = (EditText) findViewById(R.id.editTextNumber3);
         EditText terca = (EditText) findViewById(R.id.editTextNumber4);
@@ -54,10 +49,8 @@ public class CaloriesActivity extends AppCompatActivity {
 
         pessoa.setCalories(calories);
 
-        Gson gson = new Gson();
-
-        String json = gson.toJson(pessoa);
-
-        Mqtt.publishMessage("messager", json);
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("pessoa", pessoa);
+        startActivity(intent);
     }
 }
