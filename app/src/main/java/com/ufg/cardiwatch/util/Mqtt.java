@@ -16,8 +16,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 public class Mqtt {
-    public static final String brokerURI = "18.211.191.131";
-//    public static final String brokerURI = "34.198.232.62";
+//    public static final String brokerURI = "18.211.191.131";
+    public static final String brokerURI = "34.198.232.62";
 
     public static void publishMessage(String topicName, String value) {
         Mqtt5BlockingClient client = Mqtt5Client.builder()

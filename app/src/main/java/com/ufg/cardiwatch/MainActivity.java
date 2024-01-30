@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        Mqtt.sendSubscriptionSendNotification("python", this, manager);
+        Mqtt.sendSubscriptionSendNotification("cardiwatch_request", this, manager);
     }
 
     public void profileActivity(View view) {
