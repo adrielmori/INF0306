@@ -1,5 +1,7 @@
 package com.ufg.cardiwatch;
 
+import static com.ufg.cardiwatch.util.Mqtt.brokerURI;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
@@ -15,6 +17,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.fitness.FitnessOptions;
 import com.google.android.gms.fitness.data.DataType;
+import com.google.gson.Gson;
+import com.hivemq.client.mqtt.datatypes.MqttQos;
+import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient;
+import com.hivemq.client.mqtt.mqtt5.Mqtt5Client;
 import com.ufg.cardiwatch.controller.GoogleFit;
 import com.ufg.cardiwatch.model.Activity;
 import com.ufg.cardiwatch.model.HeartRate;
@@ -24,9 +30,15 @@ import com.ufg.cardiwatch.model.Step;
 import com.ufg.cardiwatch.model.Weight;
 import com.ufg.cardiwatch.util.Mqtt;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -71,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+
         Intent intent = getIntent();
         if (intent != null) {
             Serializable pessoaSerializable = intent.getSerializableExtra("pessoa");
@@ -80,7 +93,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        Mqtt.sendSubscriptionSendNotification("cardiwatch_request", this, manager);
+//        Mqtt.sendSubscriptionSendNotification("cardiwatch_request", this, manager);
+        sendSubscriptionSendColocaPesosPreditos("cardiwatch_request", this);
     }
 
     public void profileActivity(View view) {
@@ -148,5 +162,45 @@ public class MainActivity extends AppCompatActivity {
             });
         });
 
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void sendSubscriptionSendColocaPesosPreditos(String topicName, AppCompatActivity activity) {
+        List<Weight> weights = new ArrayList<>();
+
+        Mqtt5BlockingClient client = Mqtt5Client.builder()
+                .identifier(UUID.randomUUID().toString())
+                .serverHost(brokerURI)
+                .buildBlocking();
+
+        client.connect();
+
+        // Use a callback to show the message on the screen
+        client.toAsync().subscribeWith()
+                .topicFilter(topicName)
+                .qos(MqttQos.AT_LEAST_ONCE)
+                .callback(msg -> {
+                    activity.runOnUiThread(new Runnable() {
+                        public void run() {
+                            String message = new String(msg.getPayloadAsBytes(), StandardCharsets.UTF_8);
+                            message = message.substring(11, message.length() - 1);
+                            try {
+                                JSONArray jsonArray = new JSONArray(message);
+
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    Gson gson = new Gson();
+                                    Weight weight = gson.fromJson(jsonArray.getJSONObject(i).toString(), Weight.class);
+                                    weights.add(weight);
+                                }
+
+                                pessoa.setWeights_predict(weights);
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    });
+                })
+                .send();
     }
 }

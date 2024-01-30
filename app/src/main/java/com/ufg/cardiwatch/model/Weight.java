@@ -34,9 +34,9 @@ public class Weight implements Serializable {
 
     @Override
     public String toString() {
-        return "Height{" +
+        return "weight{" +
                 "day=" + day +
-                ", height=" + weight +
+                ", weight=" + weight +
                 '}';
     }
 }
