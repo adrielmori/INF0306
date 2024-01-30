@@ -4,23 +4,33 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Pessoa implements Serializable {
-    List<Activity> activities;
-    List<HeartRate> heartRates;
-    List<Sleep> sleeps;
-    List<Step> steps;
-    List<Weight> weights;
-    List<Calory> calories;
+    private List<Activity> activities;
+    private List<HeartRate> heartRates;
+    private List<Sleep> sleeps;
+    private List<Step> steps;
+    private List<Weight> weights;
+    private List<Calory> calories;
+    private Integer week_horizon;
 
     public Pessoa() {
     }
 
-    public Pessoa(List<Activity> activities, List<HeartRate> heartRates, List<Sleep> sleeps, List<Step> steps, List<Weight> weights, List<Calory> calories) {
+    public Pessoa(List<Activity> activities, List<HeartRate> heartRates, List<Sleep> sleeps, List<Step> steps, List<Weight> weights, List<Calory> calories, Integer week_horizon) {
         this.activities = activities;
         this.heartRates = heartRates;
         this.sleeps = sleeps;
         this.steps = steps;
         this.weights = weights;
         this.calories = calories;
+        this.week_horizon = week_horizon;
+    }
+
+    public Integer getWeek_horizon() {
+        return week_horizon;
+    }
+
+    public void setWeek_horizon(Integer week_horizon) {
+        this.week_horizon = week_horizon;
     }
 
     public List<Activity> getActivities() {
@@ -80,6 +90,7 @@ public class Pessoa implements Serializable {
                 ", steps=" + steps +
                 ", weights=" + weights +
                 ", calories=" + calories +
+                ", week_horizon=" + week_horizon +
                 '}';
     }
 }
