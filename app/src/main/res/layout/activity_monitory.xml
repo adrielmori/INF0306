@@ -1,104 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="10dp"
-    tools:context=".MonitoryActivity">
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:layout_margin="10dp"
+tools:context=".MonitoryActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="vertical">
+    <!-- BarChart 1 -->
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:text="Weight by Day"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"/>
 
-        <!-- BarChart 1 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Total Steps by Day"
-            android:textSize="18sp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"/>
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/barchart_weight"
+        android:layout_width="match_parent"
+        android:layout_height="300dp" />
 
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/barchart_steps"
-            android:layout_width="match_parent"
-            android:layout_height="300dp" />
+    <!-- BarChart 2 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Steps by Day"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"/>
 
-        <!-- BarChart 2 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Activity Intese by Day"
-            android:textSize="18sp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"/>
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/barchart_steps"
+        android:layout_width="match_parent"
+        android:layout_height="249dp" />
 
-        <com.github.mikephil.charting.charts.HorizontalBarChart
-            android:id="@+id/barchart_act"
-            android:layout_width="match_parent"
-            android:layout_height="269dp" />
+    <!-- BarChart 3 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Activity Intese by Day"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"/>
 
-        <!-- BarChart 3 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Weight by Day"
-            android:textSize="18sp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"/>
+    <com.github.mikephil.charting.charts.HorizontalBarChart
+        android:id="@+id/barchart_act"
+        android:layout_width="match_parent"
+        android:layout_height="187dp" />
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/barchart_weight"
-            android:layout_width="match_parent"
-            android:layout_height="300dp" />
+    <!-- BarChart 4 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sleeps Score by Day"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"/>
 
-        <!-- BarChart 4 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sleeps Score by Day"
-            android:textSize="18sp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"/>
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/barchart_sleeps"
+        android:layout_width="match_parent"
+        android:layout_height="300dp" />
 
-        <!-- BarChart 5 -->
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/barchart_sleeps"
-            android:layout_width="match_parent"
-            android:layout_height="300dp" />
+    <!-- BarChart 5 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BPM"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="BPM"
-            android:textSize="18sp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"/>
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/barchart_bpm"
+        android:layout_width="match_parent"
+        android:layout_height="406dp" />
 
-        <!-- BarChart 6 -->
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/barchart_bpm"
-            android:layout_width="match_parent"
-            android:layout_height="211dp" />
+    <!-- Adicione mais TextViews e BarCharts conforme necessário -->
 
-        <!-- Adicione mais TextViews e BarCharts conforme necessário -->
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:onClick="enviaParaMqtt"
+        android:text="Enviar para o mqtt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:onClick="enviaParaMqtt"
-            android:text="Enviar para o mqtt"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- Adicione outros elementos conforme necessário -->
+    <!-- Adicione outros elementos conforme necessário -->
 
     </LinearLayout>
 

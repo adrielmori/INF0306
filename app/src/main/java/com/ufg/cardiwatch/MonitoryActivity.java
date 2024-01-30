@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.BarData;
@@ -38,11 +39,11 @@ public class MonitoryActivity extends AppCompatActivity {
     private WeightsChartHelper weightChartHelper;
     private BpmChartHelper bpmChartHelper;
     private SleepsChartHelper sleepChartHelper;
-
     // Plots Variables
     private BarChart barChart;
     private HorizontalBarChart horizontalBarChartChart;
     private LineChart lineChart;
+    private CombinedChart combinedChart;
 
     // API response get
     private String json;
@@ -64,14 +65,14 @@ public class MonitoryActivity extends AppCompatActivity {
         horizontalBarChartChart = findViewById(R.id.barchart_act);
         activitiesChartHelper = new ActivitiesChartHelper(horizontalBarChartChart);
 
-        lineChart = findViewById(R.id.barchart_weight);
-        weightChartHelper = new WeightsChartHelper(lineChart);
+        barChart = findViewById(R.id.barchart_weight);
+        weightChartHelper = new WeightsChartHelper(barChart);
 
-        barChart = findViewById(R.id.barchart_bpm);
-        bpmChartHelper = new BpmChartHelper(barChart);
+        lineChart = findViewById(R.id.barchart_bpm);
+        bpmChartHelper = new BpmChartHelper(lineChart);
 
-        barChart = findViewById(R.id.barchart_sleeps);
-        sleepChartHelper = new SleepsChartHelper(barChart);
+        lineChart = findViewById(R.id.barchart_sleeps);
+        sleepChartHelper = new SleepsChartHelper(lineChart);
 
         dataAPI = getChartsFromAPI(pessoa);
         listKeysFromJson(dataAPI);
@@ -91,7 +92,17 @@ public class MonitoryActivity extends AppCompatActivity {
 
                 while(keys.hasNext()) {
                     String key = keys.next();
-                    Log.d("MonitoryActivity", key);
+//                    Log.d("MonitoryActivity", key);
+                }
+
+                /*
+                 * weights Chart
+                 * */
+                if (jsonObject.has("weights")) {
+                    JSONArray weightsArray = jsonObject.getJSONArray("weights");
+
+//                    Log.d("MonitoryActivity", "Valores para a chave weights -> " + weightsArray.toString());
+                    weightChartHelper.plotWeightChart(weightsArray);
                 }
 
                 /*
@@ -115,15 +126,14 @@ public class MonitoryActivity extends AppCompatActivity {
                 }
 
                 /*
-                 * weights Chart
+                 * sleeps Chart
                  * */
-                if (jsonObject.has("weights")) {
-                    JSONArray weightsArray = jsonObject.getJSONArray("weights");
+                if (jsonObject.has("sleeps")) {
+                    JSONArray sleepsArray = jsonObject.getJSONArray("sleeps");
 
-                    Log.d("MonitoryActivity", "Valores para a chave weights -> " + weightsArray.toString());
-                    weightChartHelper.plotWeightChart(weightsArray);
+                    Log.d("MonitoryActivity", "Valores para a chave sleeps -> " + sleepsArray.toString());
+                    sleepChartHelper.plotSleepsChart(sleepsArray);
                 }
-
                 /*
                  * heartRates Chart
                  * */
@@ -134,15 +144,6 @@ public class MonitoryActivity extends AppCompatActivity {
                     bpmChartHelper.plotBpmChart(bpmArray);
                 }
 
-                /*
-                 * sleeps Chart
-                 * */
-                if (jsonObject.has("sleeps")) {
-                    JSONArray sleepsArray = jsonObject.getJSONArray("sleeps");
-
-//                    Log.d("MonitoryActivity", "Valores para a chave sleeps -> " + sleepsArray.toString());
-                    sleepChartHelper.plotSleepsChart(sleepsArray);
-                }
 
             } catch (JSONException e) {
                 e.printStackTrace();
