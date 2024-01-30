@@ -1,5 +1,6 @@
 package com.ufg.cardiwatch;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -59,6 +60,9 @@ public class DigitalTwinActivity extends AppCompatActivity {
         String json = gson.toJson(pessoa);
 
         Mqtt.publishMessage("cardiwatch", json);
+
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
 }
