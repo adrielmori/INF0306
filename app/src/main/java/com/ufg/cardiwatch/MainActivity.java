@@ -1,5 +1,7 @@
 package com.ufg.cardiwatch;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import com.ufg.cardiwatch.model.Pessoa;
 import com.ufg.cardiwatch.model.Sleep;
 import com.ufg.cardiwatch.model.Step;
 import com.ufg.cardiwatch.model.Weight;
+import com.ufg.cardiwatch.util.Mqtt;
 
 import java.io.Serializable;
 import java.util.List;
@@ -50,6 +53,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        NotificationChannel channel = new NotificationChannel("channel1", "channel1", NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationManager manager = getSystemService(NotificationManager.class);
+        manager.createNotificationChannel(channel);
+
         GoogleSignInAccount account = GoogleSignIn.getAccountForExtension(this, fitnessOptions);
 
         if (!GoogleSignIn.hasPermissions(account, fitnessOptions)) {
@@ -72,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
                 this.pessoa.setCalories(pessoa.getCalories());
             }
         }
+
+        Mqtt.sendSubscriptionSendNotification("python", this, manager);
     }
 
     public void profileActivity(View view) {
