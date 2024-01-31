@@ -9,13 +9,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:text="Calorias da Semana"
+            android:text="Calories for the Week"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -29,11 +30,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Domingo" />
+                android:text="Sunday" />
 
             <EditText
                 android:id="@+id/editTextNumber"
-                android:layout_width="wrap_content"
+                android:layout_width="59dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
@@ -51,14 +52,14 @@
 
             <TextView
                 android:id="@+id/textView3"
-                android:layout_width="wrap_content"
+                android:layout_width="57dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Segunda-feira" />
+                android:text="Monday" />
 
             <EditText
                 android:id="@+id/editTextNumber3"
-                android:layout_width="wrap_content"
+                android:layout_width="71dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
@@ -79,11 +80,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Terça-feira" />
+                android:text="Tuesday" />
 
             <EditText
                 android:id="@+id/editTextNumber4"
-                android:layout_width="wrap_content"
+                android:layout_width="66dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
@@ -104,11 +105,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Quarta-feira" />
+                android:text="Wednesday " />
 
             <EditText
                 android:id="@+id/editTextNumber5"
-                android:layout_width="wrap_content"
+                android:layout_width="89dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
@@ -129,11 +130,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Quinta-feira" />
+                android:text="Thursday " />
 
             <EditText
                 android:id="@+id/editTextNumber8"
-                android:layout_width="wrap_content"
+                android:layout_width="75dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
@@ -154,11 +155,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Sexta-feira" />
+                android:text="Friday" />
 
             <EditText
                 android:id="@+id/editTextNumber6"
-                android:layout_width="wrap_content"
+                android:layout_width="51dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
@@ -179,11 +180,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Sabado" />
+                android:text="Saturday" />
 
             <EditText
                 android:id="@+id/editTextNumber7"
-                android:layout_width="wrap_content"
+                android:layout_width="68dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
@@ -210,7 +211,7 @@
                 android:layout_height="62dp"
                 android:layout_weight="1"
                 android:onClick="enviaParaTelaPrincipal"
-                android:text="Salvar" />
+                android:text="Save" />
 
             <Space
                 android:layout_width="wrap_content"

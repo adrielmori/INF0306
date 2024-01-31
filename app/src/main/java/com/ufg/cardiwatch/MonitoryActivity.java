@@ -24,6 +24,7 @@ import com.ufg.cardiwatch.util.Mqtt;
 import com.ufg.cardiwatch.util.SleepsChartHelper;
 import com.ufg.cardiwatch.util.StepsChartHelper;
 import com.ufg.cardiwatch.util.WeightsChartHelper;
+import com.ufg.cardiwatch.util.WeightsPredictionChartHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,6 +38,7 @@ public class MonitoryActivity extends AppCompatActivity {
     private StepsChartHelper stepsChartHelper;
     private ActivitiesChartHelper activitiesChartHelper;
     private WeightsChartHelper weightChartHelper;
+    private WeightsPredictionChartHelper weightsPredictionChartHelper;
     private BpmChartHelper bpmChartHelper;
     private SleepsChartHelper sleepChartHelper;
     // Plots Variables
@@ -54,17 +56,24 @@ public class MonitoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_monitory);
 
-        // MQTT data publish
+        Gson gson = new Gson();
+        json = gson.toJson(pessoa);
+        listKeysFromJson(json);
 
         // getData Logic Implementation
+        barChart = findViewById(R.id.barchart_weight);
+        if (!checkWeightsPredict(pessoa)) {
+            Log.d("MonitoryActivity", "'weights_predict' não existe ou está vazia.");
+            weightChartHelper = new WeightsChartHelper(barChart);
+        } else {
+            weightsPredictionChartHelper = new WeightsPredictionChartHelper(barChart);
+        }
+
         barChart = findViewById(R.id.barchart_steps);
         stepsChartHelper = new StepsChartHelper(barChart);
 
         horizontalBarChartChart = findViewById(R.id.barchart_act);
         activitiesChartHelper = new ActivitiesChartHelper(horizontalBarChartChart);
-
-        barChart = findViewById(R.id.barchart_weight);
-        weightChartHelper = new WeightsChartHelper(barChart);
 
         lineChart = findViewById(R.id.barchart_bpm);
         bpmChartHelper = new BpmChartHelper(lineChart);
@@ -72,13 +81,12 @@ public class MonitoryActivity extends AppCompatActivity {
         lineChart = findViewById(R.id.barchart_sleeps);
         sleepChartHelper = new SleepsChartHelper(lineChart);
 
-        dataAPI = getChartsFromAPI(pessoa);
-        listKeysFromJson(dataAPI);
+        dataAPI = getChartsFromAPI(pessoa, checkWeightsPredict(pessoa));
 
         Log.d("MonitoryActivity", "Enviando JSON para MQTT: " + dataAPI);
     }
 
-    private String getChartsFromAPI(Pessoa pessoa) {
+    private String getChartsFromAPI(Pessoa pessoa, boolean checkWeightsPredict) {
         Gson gson = new Gson();
         json = gson.toJson(pessoa);
 
@@ -96,11 +104,22 @@ public class MonitoryActivity extends AppCompatActivity {
                 /*
                  * weights Chart
                  * */
-                if (jsonObject.has("weights")) {
+                if (jsonObject.has("weights") && !checkWeightsPredict) {
                     JSONArray weightsArray = jsonObject.getJSONArray("weights");
 
 //                    Log.d("MonitoryActivity", "Valores para a chave weights -> " + weightsArray.toString());
                     weightChartHelper.plotWeightChart(weightsArray);
+                }
+
+                /*
+                 * weights Predicted Chart
+                 * */
+                if (jsonObject.has("weights") && checkWeightsPredict) {
+                    JSONArray weightsArray = jsonObject.getJSONArray("weights");
+                    JSONArray weightsPredictedArray = jsonObject.getJSONArray("weights_predict");
+
+//                    Log.d("MonitoryActivity", "Valores para a chave weights -> " + weightsArray.toString());
+                    weightsPredictionChartHelper.plotWeightChart(weightsArray, weightsPredictedArray);
                 }
 
                 /*
@@ -171,8 +190,6 @@ public class MonitoryActivity extends AppCompatActivity {
                     String key = keys.next();
                     Log.d("MonitoryActivity", "Chave: " + key);
 
-                    // Se o valor associado à chave for outro objeto JSON, você pode
-                    // chamar recursivamente esta função para listar as chaves desse objeto.
                     if (jsonObject.get(key) instanceof JSONObject) {
                         listKeysFromJson(jsonObject.get(key).toString());
                     }
@@ -184,4 +201,26 @@ public class MonitoryActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    private boolean checkWeightsPredict(Pessoa pessoa) {
+        Gson gson = new Gson();
+        String json = gson.toJson(pessoa);
+
+        if (json != null) {
+            try {
+                JSONObject jsonObject = new JSONObject(json);
+                if (!jsonObject.has("weights_predict") || jsonObject.getJSONArray("weights_predict").length() == 0) {
+                    return false;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Log.d("MonitoryActivity", "A string JSON está nula.");
+        }
+
+        return true;
+    }
+
+
 }
