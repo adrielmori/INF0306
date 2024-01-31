@@ -1,5 +1,7 @@
 package com.ufg.cardiwatch;
 
+import static com.ufg.cardiwatch.MainActivity.pessoa;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,11 +16,10 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        Intent intent = getIntent();
-        String message = intent.getStringExtra("peso");
+        String message = "0";
 
-        if (message == null) {
-            message = "0";
+        if (pessoa.getWeights() != null) {
+            message = pessoa.getWeights().get(pessoa.getWeights().size() - 1).getWeight().toString();
         }
 
         TextView textView = findViewById(R.id.textViewWeight);

@@ -1,5 +1,7 @@
 package com.ufg.cardiwatch;
 
+import static com.ufg.cardiwatch.MainActivity.pessoa;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,8 +34,6 @@ import java.util.Iterator;
 
 public class MonitoryActivity extends AppCompatActivity {
 
-    Pessoa pessoa = new Pessoa();
-
     private StepsChartHelper stepsChartHelper;
     private ActivitiesChartHelper activitiesChartHelper;
     private WeightsChartHelper weightChartHelper;
@@ -55,8 +55,6 @@ public class MonitoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_monitory);
 
         // MQTT data publish
-        Intent intent = getIntent();
-        pessoa = (Pessoa) intent.getSerializableExtra("pessoa");
 
         // getData Logic Implementation
         barChart = findViewById(R.id.barchart_steps);

@@ -44,7 +44,7 @@ import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final Pessoa pessoa = new Pessoa();
+    public static final Pessoa pessoa = new Pessoa();
     private FitnessOptions fitnessOptions = FitnessOptions.builder()
             .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
             .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
@@ -99,30 +99,21 @@ public class MainActivity extends AppCompatActivity {
 
     public void profileActivity(View view) {
         Intent intent = new Intent(this, ProfileActivity.class);
-
-        if (pessoa.getWeights().size() > 0) {
-            intent.putExtra("peso", pessoa.getWeights().get(pessoa.getWeights().size() - 1).getWeight().toString());
-            Log.d("peso", pessoa.getWeights().get(pessoa.getWeights().size() - 1).getWeight().toString());
-        }
-
         startActivity(intent);
     }
 
     public void digitalTwinActivity(View view) {
         Intent intent = new Intent(this, DigitalTwinActivity.class);
-        intent.putExtra("pessoa", pessoa);
         startActivity(intent);
     }
 
     public void monitoringActivity(View view) {
         Intent intent = new Intent(this, MonitoryActivity.class);
-        intent.putExtra("pessoa", pessoa);
         startActivity(intent);
     }
 
     public void caloriesActivity(View view) {
         Intent intent = new Intent(this, CaloriesActivity.class);
-        intent.putExtra("pessoa", pessoa);
         startActivity(intent);
     }
 
@@ -159,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                 pessoa.setActivities(activities);
                 pessoa.setWeights(weights);
                 pessoa.setSleeps(sleeps);
+                Mqtt.publishMessage("pesoAtual", Objects.requireNonNull(pessoa.getWeights().get(pessoa.getWeights().size() - 1).getWeight()).toString());
             });
         });
 

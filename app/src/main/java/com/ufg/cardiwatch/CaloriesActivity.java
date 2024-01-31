@@ -1,5 +1,7 @@
 package com.ufg.cardiwatch;
 
+import static com.ufg.cardiwatch.MainActivity.pessoa;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,18 +16,11 @@ import java.util.List;
 
 public class CaloriesActivity extends AppCompatActivity {
 
-    private Pessoa pessoa;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calories);
 
-        Intent intent = getIntent();
-        pessoa = (Pessoa) intent.getSerializableExtra("pessoa");
-
-        if (pessoa == null) {
-            pessoa = new Pessoa();
-        }
     }
 
     public void enviaParaTelaPrincipal(View view) {
