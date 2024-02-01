@@ -117,6 +117,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void balanceActivity(View view) {
+        Intent intent = new Intent(this, BalanceActivity.class);
+        startActivity(intent);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

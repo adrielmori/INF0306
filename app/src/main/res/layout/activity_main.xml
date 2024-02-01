@@ -129,7 +129,8 @@
                 android:layout_height="170dp"
                 android:layout_margin="10dp"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="5dp">
+                app:cardElevation="5dp"
+                android:onClick="balanceActivity">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -141,14 +142,14 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginTop="18dp"
-                        android:src="@drawable/medical" />
+                        android:src="@drawable/gym" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/googlesans_bold"
-                        android:text="Medical"
+                        android:text="Balance Device"
                         android:textSize="18sp" />
 
                 </LinearLayout>
@@ -204,14 +205,14 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginTop="18dp"
-                        android:src="@drawable/gym" />
+                        android:src="@drawable/medical" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/googlesans_bold"
-                        android:text="Gym"
+                        android:text="Medical"
                         android:textSize="18sp" />
 
                 </LinearLayout>
