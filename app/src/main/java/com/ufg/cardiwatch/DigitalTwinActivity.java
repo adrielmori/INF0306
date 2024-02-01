@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -34,7 +36,6 @@ public class DigitalTwinActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_digital_twin);
 
-        getWeekData();
 
         TextView pesoAtual = findViewById(R.id.textView10);
 
@@ -43,7 +44,76 @@ public class DigitalTwinActivity extends AppCompatActivity {
         } else {
             pesoAtual.setText(pessoa.getWeights().get(pessoa.getWeights().size() - 1).getWeight().toString() + " kg");
         }
+
+        Mqtt.publishMessage("ping", "ping");
+        enviaSpinner("week", findViewById(R.id.spinner));
+        enviaCheckBox("checkbox1", findViewById(R.id.checkBox));
+        enviaCheckBox("checkbox2", findViewById(R.id.checkBox2));
+        enviaCheckBox("checkbox3", findViewById(R.id.checkBox3));
+        enviaCheckBox("checkbox4", findViewById(R.id.checkBox4));
+        getWeekData();
+
+        pegaCheckBox("checkbox1", this, findViewById(R.id.checkBox));
+        pegaCheckBox("checkbox2", this, findViewById(R.id.checkBox2));
+        pegaCheckBox("checkbox3", this, findViewById(R.id.checkBox3));
+        pegaCheckBox("checkbox4", this, findViewById(R.id.checkBox4));
+
         sendSubscriptionSemanaSelecionada("week", this);
+    }
+    private void enviaSpinner(String topicName, Spinner spinner) {
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String spinnerValue = parent.getItemAtPosition(position).toString().equals("1 week") ? "1" : "2";
+                Mqtt.publishMessage(topicName, spinnerValue);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void pegaCheckBox(String topicName, AppCompatActivity activity, CheckBox checkBox) {
+        Mqtt5BlockingClient client = Mqtt5Client.builder()
+                .identifier(UUID.randomUUID().toString())
+                .serverHost(brokerURI)
+                .buildBlocking();
+
+        client.connect();
+
+        // Use a callback to show the message on the screen
+        client.toAsync().subscribeWith()
+                .topicFilter(topicName)
+                .qos(MqttQos.AT_LEAST_ONCE)
+                .callback(msg -> {
+                    activity.runOnUiThread(new Runnable() {
+                        public void run() {
+                            String message = new String(msg.getPayloadAsBytes(), StandardCharsets.UTF_8);
+                            if (message.equals("1")) {
+                                checkBox.setChecked(true);
+                            } else {
+                                checkBox.setChecked(false);
+                            }
+                        }
+                    });
+                })
+                .send();
+    }
+
+    private void enviaCheckBox(String topicName, CheckBox checkBox) {
+        checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (((CheckBox) v).isChecked()) {
+                    Mqtt.publishMessage(topicName, "1");
+                } else {
+                    Mqtt.publishMessage(topicName, "0");
+                }
+            }
+        });
     }
 
     private void getWeekData() {
