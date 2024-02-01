@@ -3,6 +3,11 @@ package com.ufg.cardiwatch;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
+import android.bluetooth.BluetoothProfile;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,13 +32,11 @@ import android.util.Log;
 public class BalanceActivity extends AppCompatActivity {
 
     private static final String BALANCE_ADDRESS = "88:22:B2:FF:6A:87";
-    private static final UUID BALANCE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");  // UUID padrão para dispositivos Bluetooth SPP
-
     private BluetoothAdapter bluetoothAdapter;
-    private BluetoothSocket bluetoothSocket;
-    private InputStream inputStream;
+    private BluetoothGatt bluetoothGatt;
 
-    // ...
+    UUID serviceUUID = UUID.fromString("00001530-0000-3512-2118-0009AF100700");
+    UUID characteristicUUID = UUID.fromString("YOUR_CHARACTERISTIC_UUID"); // Substitua pelo UUID da característica
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,38 +51,48 @@ public class BalanceActivity extends AppCompatActivity {
         }
 
         BluetoothDevice balanceDevice = bluetoothAdapter.getRemoteDevice(BALANCE_ADDRESS);
-        try {
-            if (ContextCompat.checkSelfPermission(BalanceActivity.this, android.Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_DENIED)
-            {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                {
-                    ActivityCompat.requestPermissions(BalanceActivity.this, new String[]{android.Manifest.permission.BLUETOOTH_CONNECT}, 2);
-                    return;
+        if (ContextCompat.checkSelfPermission(BalanceActivity.this, android.Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_DENIED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                ActivityCompat.requestPermissions(BalanceActivity.this, new String[]{android.Manifest.permission.BLUETOOTH_CONNECT}, 2);
+                return;
+            }
+        }
+
+        bluetoothGatt = balanceDevice.connectGatt(this, false, new BluetoothGattCallback() {
+            @Override
+            public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+                if (newState == BluetoothProfile.STATE_CONNECTED) {
+                    Log.d("BalanceActivity", "Conectado ao dispositivo");
+                    gatt.discoverServices();
+                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                    Log.d("BalanceActivity", "Desconectado do dispositivo");
                 }
             }
 
-            bluetoothSocket = balanceDevice.createRfcommSocketToServiceRecord(BALANCE_UUID);
-            try {
-                bluetoothSocket.connect();
-                Log.d("BalanceActivity", "Conectado ao dispositivo");
-            } catch (IOException e) {
-                Log.d("BalanceActivity", "Falha ao conectar ao dispositivo");
-                return;
+            @Override
+            public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+                if (status == BluetoothGatt.GATT_SUCCESS) {
+                    BluetoothGattService service = gatt.getService(serviceUUID);
+                    if (service != null) {
+                        BluetoothGattCharacteristic characteristic = service.getCharacteristic(characteristicUUID);
+                        if (characteristic != null) {
+                            gatt.readCharacteristic(characteristic);
+                        }
+                    }
+                } else {
+                    Log.w("BalanceActivity", "onServicesDiscovered received: " + status);
+                }
             }
 
-            inputStream = bluetoothSocket.getInputStream();
-
-            byte[] buffer = new byte[1024];
-            int bytes;
-            while ((bytes = inputStream.read(buffer)) != -1) {
-                String readMessage = new String(buffer, 0, bytes);
-                Toast.makeText(this, "Peso: " + readMessage, Toast.LENGTH_LONG).show();
+            @Override
+            public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+                if (status == BluetoothGatt.GATT_SUCCESS) {
+                    byte[] data = characteristic.getValue();
+                    // Aqui você pode processar os dados recebidos
+                }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        });
     }
-
-    // ...
 }
+
 
