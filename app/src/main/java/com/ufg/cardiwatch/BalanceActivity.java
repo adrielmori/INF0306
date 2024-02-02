@@ -87,13 +87,6 @@ public class BalanceActivity extends AppCompatActivity {
                         String lastValue = receivedData.get(receivedData.size() - 1); // Aqui eu pego o útimo valor para a balança
                         double lastWeight = Double.parseDouble(lastValue);
                         if (lastWeight > 100.0) {
-                            /*
-                            * Envindo os novos dados com o novo
-                            * peso ao MQTT, para que seja processado
-                            * na AWS
-                            * */
-                            enviarParaMqtt();
-
                             Log.d("BalanceActivity", "Dados recebidos: " + receivedData.toString());
                             Log.d("BalanceActivity", "Last Value: " + lastValue);
                             receivedData.clear();
@@ -152,6 +145,11 @@ public class BalanceActivity extends AppCompatActivity {
                             String lastValue = receivedData.get(receivedData.size() - 1);
                             double lastWeight = Double.parseDouble(lastValue);
                             if (lastWeight > 100.0) {
+                                /*
+                                 * Envindo os novos dados com o novo
+                                 * peso ao MQTT, para que seja processado
+                                 * na AWS
+                                 * */
                                 enviarParaMqtt();
                                 receivedData.clear();
                             }
