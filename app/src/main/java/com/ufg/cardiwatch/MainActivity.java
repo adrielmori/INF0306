@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothGatt bluetoothGatt;
-    private ArrayList<String> receivedData = new ArrayList<>();
+    private ArrayList<String> receivedData = new ArrayList<>(); //Aqui eu guardo o que a balaça rebenbe
 
     private FitnessOptions fitnessOptions = FitnessOptions.builder()
             .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
@@ -122,66 +122,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         }
-
-        BluetoothDevice balanceDevice = bluetoothAdapter.getRemoteDevice(BALANCE_ADDRESS);
-        if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_DENIED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.BLUETOOTH_CONNECT}, 2);
-                return;
-            }
-        }
-
-        bluetoothGatt = balanceDevice.connectGatt(this, false, new BluetoothGattCallback() {
-            @Override
-            public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-                if (newState == BluetoothProfile.STATE_CONNECTED) {
-                    Log.d("MainActivity", "Conectado ao dispositivo");
-                    gatt.discoverServices();
-                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                    Log.d("MainActivity", "Desconectado do dispositivo");
-                    if (receivedData != null && !receivedData.isEmpty()) {
-                        enviarParaMqtt();
-                        Log.d("MainActivity", "Dados recebidos: " + receivedData.toString());
-                        String lastValue = receivedData.get(receivedData.size() - 1); // Aqui eu pego o útimo valor para a balança
-                        Log.d("MainActivity", "Last Value: " + lastValue);
-                    } else {
-                        Log.d("MainActivity", "Dados recebidos: Lista vazia ou nula");
-                    }
-                    receivedData.clear();
-                }
-            }
-
-
-            @Override
-            public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-                if (status == BluetoothGatt.GATT_SUCCESS) {
-                    for (BluetoothGattService service : gatt.getServices()) {
-                        if (service.getUuid().toString().equals(UUID_CHARACTER)) {
-                            for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
-                                gatt.setCharacteristicNotification(characteristic, true);
-                            }
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-                byte[] data = characteristic.getValue();
-                StringBuilder hexString = new StringBuilder();
-                for (byte b : data) {
-                    hexString.append(String.format("%02X-", b));
-                }
-                receivedData.add(hexString.toString());
-
-                // KG witght Decoder
-                if (data.length >= 13) {
-                    int weight = ((data[12] & 0xFF) << 8) | (data[11] & 0xFF);
-                    double weightInKg = weight / 200.0;
-                    Log.d("MainActivity","Peso kg " + weightInKg);
-                }
-            }
-        });
+        connectToDevice();
     }
 
     public void profileActivity(View view) {
@@ -300,5 +241,64 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    private void connectToDevice() {
+        BluetoothDevice balanceDevice = bluetoothAdapter.getRemoteDevice(BALANCE_ADDRESS);
+        if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_DENIED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.BLUETOOTH_CONNECT}, 2);
+                return;
+            }
+        }
+        bluetoothGatt = balanceDevice.connectGatt(this, false, new BluetoothGattCallback() {
+
+            @Override
+            public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+                if (newState == BluetoothProfile.STATE_CONNECTED) {
+                    Log.d("MainActivity", "Conectado ao dispositivo");
+                    gatt.discoverServices();
+                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                    if (receivedData != null && !receivedData.isEmpty()) {
+                        String lastValue = receivedData.get(receivedData.size() - 1); // Aqui eu pego o útimo valor para a balança
+                        double lastWeight = Double.parseDouble(lastValue);
+                        if (lastWeight > 100.0) { // Adicione esta condição
+                            enviarParaMqtt();
+                            Log.d("MainActivity", "Dados recebidos: " + receivedData.toString());
+                            Log.d("MainActivity", "Last Value: " + lastValue);
+                        }
+                    }
+                    receivedData.clear();
+                    connectToDevice(); // Tente reconectar
+                }
+            }
+
+
+            @Override
+            public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+                if (status == BluetoothGatt.GATT_SUCCESS) {
+                    for (BluetoothGattService service : gatt.getServices()) {
+                        if (service.getUuid().toString().equals(UUID_CHARACTER)) {
+                            for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
+                                gatt.setCharacteristicNotification(characteristic, true);
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+                byte[] data = characteristic.getValue();
+
+                // KG weight Decoder
+                if (data.length >= 13) {
+                    int weight = ((data[12] & 0xFF) << 8) | (data[11] & 0xFF);
+                    double weightInKg = weight / 200.0;
+                    receivedData.add(Double.toString(weightInKg));
+                    Log.d("MainActivity", "Weights Array " + receivedData);
+                }
+            }
+        });
     }
 }
