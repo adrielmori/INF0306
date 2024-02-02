@@ -56,16 +56,15 @@ public class DigitalTwinActivity extends AppCompatActivity {
         setContentView(R.layout.activity_digital_twin);
 
         pesoAtual = findViewById(R.id.textView10);
+        String message = "0";
 
-        if (pessoa.getWeights().size() == 0 || pessoa.getWeights() == null || pessoa.getWeightBalance() == null) {
-            pesoAtual.setText("0 kg");
-        } else {
-            if (pessoa.getWeightBalance() != null) {
-                pesoAtual.setText(pessoa.getWeightBalance().getWeight().toString() + " kg");
-            } else {
-                pesoAtual.setText(pessoa.getWeights().get(pessoa.getWeights().size() - 1).getWeight().toString() + " kg");
-            }
+        if (pessoa.getWeightBalance() != null) {
+            message = pessoa.getWeightBalance().getWeight().toString();
+        } else if (pessoa.getWeights() != null) {
+            message = pessoa.getWeights().get(pessoa.getWeights().size() - 1).getWeight().toString();
         }
+
+        pesoAtual.setText(message + " kg");
 
         Mqtt.publishMessage("ping", "ping");
         enviaSpinner("week", findViewById(R.id.spinner));
