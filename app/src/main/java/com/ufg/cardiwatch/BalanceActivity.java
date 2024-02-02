@@ -10,10 +10,12 @@ import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.bluetooth.BluetoothDevice;
+import android.os.Handler;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
@@ -25,7 +27,9 @@ import java.util.Date;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.ufg.cardiwatch.model.Weight;
+import com.ufg.cardiwatch.util.Mqtt;
 
 public class BalanceActivity extends AppCompatActivity {
 
@@ -36,6 +40,9 @@ public class BalanceActivity extends AppCompatActivity {
     private ArrayList<String> receivedData = new ArrayList<>();
     private TextView weightTextView;
     private boolean isFirstConnection = true; // Adicione esta linha
+
+    private Handler handler = new Handler();
+    private Runnable runnableCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,10 +86,22 @@ public class BalanceActivity extends AppCompatActivity {
                     }
                     gatt.discoverServices();
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                    Log.d("BalanceActivity", "Desconectado do dispositivo");
-                    Log.d("BalanceActivity", "Dados recebidos: " + receivedData.toString());
+                    if (receivedData != null && !receivedData.isEmpty()) {
+                        String lastValue = receivedData.get(receivedData.size() - 1); // Aqui eu pego o útimo valor para a balança
+                        double lastWeight = Double.parseDouble(lastValue);
+                        if (lastWeight > 100.0) { // Adicione esta condição
+                            enviarParaMqtt();
+                            Log.d("BalanceActivity", "Dados recebidos: " + receivedData.toString());
+                            Log.d("BalanceActivity", "Last Value: " + lastValue);
+                            receivedData.clear();
+                            gatt.disconnect();
+                        }
+                    }else {
+                        Log.d("BalanceActivity", "Array Vazio ou usuário incorreto");
+                        gatt.disconnect(); // Desconecte se não houver fluxo de dados
+                    }
                     receivedData.clear();
-                    connectToDevice(); // Tente reconectar
+//        connectToDevice(); // Tente reconectar
                 }
             }
 
@@ -104,20 +123,12 @@ public class BalanceActivity extends AppCompatActivity {
             @Override
             public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
                 byte[] data = characteristic.getValue();
-                StringBuilder hexString = new StringBuilder();
-                for (byte b : data) {
-                    hexString.append(String.format("%02X-", b));
-                }
-                receivedData.add(hexString.toString());
-                Log.d("BalanceActivity", "Data changed: " + hexString.toString());
-                Log.d("BalanceActivity", "All received data: " + receivedData.toString());
 
-                // KG witght Decoder
-                double weightInKg = 0;
+                // KG weight Decoder
                 if (data.length >= 13) {
                     int weight = ((data[12] & 0xFF) << 8) | (data[11] & 0xFF);
-                    weightInKg = weight / 200.0;
-    //                    Log.d("BalanceActivity", "Weight in kg: " + weightInKg);
+                    double weightInKg = weight / 200.0;
+                    receivedData.add(Double.toString(weightInKg));
                     double finalWeightInKg = weightInKg;
                     runOnUiThread(new Runnable() {
                         @Override
@@ -126,16 +137,41 @@ public class BalanceActivity extends AppCompatActivity {
                         }
                     });
 
-                }
+                    // Cancela qualquer Runnable pendente
+                    if (runnableCode != null) {
+                        handler.removeCallbacks(runnableCode);
+                    }
 
-    //               Parte para o IGOR -> Fazer peso da balança dinamicamente
-                Calendar calendar = Calendar.getInstance();
-                Date date = calendar.getTime();
-                Long time = date.getTime();
-                pessoa.setWeightBalance(new Weight(time, (float) weightInKg));
-                Log.d("BalanceActivity","Peso kg " + pessoa.getWeightBalance().getWeight());
+                    // Cria um novo Runnable para verificar se receivedData foi alterado após 5 segundos
+                    runnableCode = new Runnable() {
+                        @Override
+                        public void run() {
+                            String lastValue = receivedData.get(receivedData.size() - 1);
+                            double lastWeight = Double.parseDouble(lastValue);
+                            if (lastWeight > 100.0) {
+                                enviarParaMqtt();
+                                receivedData.clear();
+                            }
+                        }
+                    };
+
+                    // Executa o Runnable após 5 segundos
+                    handler.postDelayed(runnableCode, 5000);
+                }
             }
 
         });
+    }
+    //      Complementar para permirtir a Digital Twin sem precisar em na aba de Digital Twin
+    public void enviarParaMqtt() {
+        Log.d("BalanceActivity", "Oie, estou indo para o MQTT");
+        Gson gson = new Gson();
+        pessoa.setWeights_predict(null);
+        String json = gson.toJson(pessoa);
+
+        Mqtt.publishMessage("cardiwatch", json);
+
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }

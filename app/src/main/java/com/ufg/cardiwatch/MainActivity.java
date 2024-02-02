@@ -61,11 +61,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static final Pessoa pessoa = new Pessoa();
     private static final String BALANCE_ADDRESS = "88:22:B2:FF:6A:87";
-    private static final String UUID_CHARACTER = "0000181b-0000-1000-8000-00805f9b34fb";
-
-    private BluetoothAdapter bluetoothAdapter;
-    private BluetoothGatt bluetoothGatt;
-    private ArrayList<String> receivedData = new ArrayList<>(); //Aqui eu guardo o que a balaça rebenbe
 
     private FitnessOptions fitnessOptions = FitnessOptions.builder()
             .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
@@ -106,15 +101,6 @@ public class MainActivity extends AppCompatActivity {
 
         Mqtt.sendSubscriptionSendNotification("cardiwatch_request", this, manager);
         sendSubscriptionSendColocaPesosPreditos("cardiwatch_request", this);
-
-//        Bluetooth Phase
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter == null) {
-            Toast.makeText(this, "Bluetooth não disponível", Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
-        connectToDevice();
     }
 
     public void profileActivity(View view) {
@@ -224,107 +210,5 @@ public class MainActivity extends AppCompatActivity {
                     });
                 })
                 .send();
-    }
-
-
-    //      Complementar para permirtir a Digital Twin sem precisar em na aba de Digital Twin
-    public void enviarParaMqtt() {
-        Log.d("MainActivity", "Oie, estou indo para o MQTT");
-        Gson gson = new Gson();
-        pessoa.setWeights_predict(null);
-        String json = gson.toJson(pessoa);
-
-        Mqtt.publishMessage("cardiwatch", json);
-
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
-
-    private void connectToDevice() {
-        BluetoothDevice balanceDevice = bluetoothAdapter.getRemoteDevice(BALANCE_ADDRESS);
-        if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_DENIED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.BLUETOOTH_CONNECT}, 2);
-                return;
-            }
-        }
-        bluetoothGatt = balanceDevice.connectGatt(this, false, new BluetoothGattCallback() {
-
-            @Override
-            public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-                if (newState == BluetoothProfile.STATE_CONNECTED) {
-                    Log.d("MainActivity", "Conectado ao dispositivo");
-                    gatt.discoverServices();
-                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                    if (receivedData != null && !receivedData.isEmpty()) {
-                        String lastValue = receivedData.get(receivedData.size() - 1); // Aqui eu pego o útimo valor para a balança
-                        double lastWeight = Double.parseDouble(lastValue);
-                        if (lastWeight > 100.0) { // Adicione esta condição
-                            enviarParaMqtt();
-                            Log.d("MainActivity", "Dados recebidos: " + receivedData.toString());
-                            Log.d("MainActivity", "Last Value: " + lastValue);
-                        }
-                    } else {
-                        Log.d("MainActivity", "Array Vazio ou usuário incorreto");
-                    }
-                    receivedData.clear();
-                    connectToDevice(); // Tente reconectar
-                }
-            }
-
-
-            @Override
-            public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-                if (status == BluetoothGatt.GATT_SUCCESS) {
-                    for (BluetoothGattService service : gatt.getServices()) {
-                        if (service.getUuid().toString().equals(UUID_CHARACTER)) {
-                            for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
-                                gatt.setCharacteristicNotification(characteristic, true);
-                            }
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-                byte[] data = characteristic.getValue();
-
-                // KG weight Decoder
-                if (data.length >= 13) {
-                    int weight = ((data[12] & 0xFF) << 8) | (data[11] & 0xFF);
-                    double weightInKg = weight / 200.0;
-                    receivedData.add(Double.toString(weightInKg));
-                    Log.d("MainActivity", "Weights Array " + receivedData);
-                }
-            }
-        });
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (bluetoothGatt != null) {
-            if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
-            bluetoothGatt.disconnect();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (bluetoothGatt != null) {
-            connectToDevice();
-        }
     }
 }

@@ -26,6 +26,9 @@ public class Pessoa implements Serializable {
         );
 
         this.calories = calories;
+        this.week_horizon = List.of(
+                new WeekHorizon(1)
+        );
     }
 
     public Pessoa(List<Activity> activities, List<HeartRate> heartRates, List<Sleep> sleeps, List<Step> steps, List<Weight> weights, List<Calory> calories,  List<WeekHorizon> week_horizon, List<Weight> weights_predict, Weight weightBalance) {
