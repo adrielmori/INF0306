@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-//      Complementar para permirtir a Digital Twin sem precisar em na aba de Digital Twin
+    //      Complementar para permirtir a Digital Twin sem precisar em na aba de Digital Twin
     public void enviarParaMqtt() {
         Log.d("MainActivity", "Oie, estou indo para o MQTT");
         Gson gson = new Gson();
@@ -267,6 +267,8 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("MainActivity", "Dados recebidos: " + receivedData.toString());
                             Log.d("MainActivity", "Last Value: " + lastValue);
                         }
+                    } else {
+                        Log.d("MainActivity", "Array Vazio ou usuário incorreto");
                     }
                     receivedData.clear();
                     connectToDevice(); // Tente reconectar
@@ -300,5 +302,32 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (bluetoothGatt != null) {
+            if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            bluetoothGatt.disconnect();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (bluetoothGatt != null) {
+            connectToDevice();
+        }
     }
 }

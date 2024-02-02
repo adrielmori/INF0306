@@ -101,7 +101,7 @@ public class DigitalTwinActivity extends AppCompatActivity {
             @Override
             public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
                 if (newState == BluetoothProfile.STATE_CONNECTED) {
-                    Log.d("BalanceActivity", "Conectado ao dispositivo");
+                    Log.d("DigitalTwinActivity", "Conectado ao dispositivo");
                     if (isFirstConnection) { // Adicione esta condição
                         runOnUiThread(new Runnable() {
                             @Override
@@ -113,8 +113,8 @@ public class DigitalTwinActivity extends AppCompatActivity {
                     }
                     gatt.discoverServices();
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                    Log.d("BalanceActivity", "Desconectado do dispositivo");
-                    Log.d("BalanceActivity", "Dados recebidos: " + receivedData.toString());
+                    Log.d("DigitalTwinActivity", "Desconectado do dispositivo");
+                    Log.d("DigitalTwinActivity", "Dados recebidos: " + receivedData.toString());
                     receivedData.clear();
                     connectToDevice(); // Tente reconectar
                 }
