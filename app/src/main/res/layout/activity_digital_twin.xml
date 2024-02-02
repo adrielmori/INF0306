@@ -57,28 +57,28 @@
                 <CheckBox
                     android:id="@+id/checkBox"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
                     android:text="Steps" />
 
                 <CheckBox
                     android:id="@+id/checkBox2"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
                     android:text="BPM" />
 
                 <CheckBox
                     android:id="@+id/checkBox4"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
                     android:text="Calories" />
 
                 <CheckBox
                     android:id="@+id/checkBox3"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
                     android:text="Sleep" />
             </RadioGroup>
@@ -106,20 +106,24 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textView9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/textView11"
+                    android:layout_width="46dp"
+                    android:layout_height="30dp"
                     android:layout_weight="1"
-                    android:text="Actual:" />
+                    android:text="Expected:"
+                    android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/textView10"
+                    android:id="@+id/textView12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:text="TextView" />
+                    android:textSize="18sp"
+                    android:text="110,0 kg" />
+
             </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -128,21 +132,24 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textView11"
-                    android:layout_width="46dp"
+                    android:id="@+id/textView9"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Expected:" />
+                    android:text="Actual:"
+                    android:textSize="24sp" />
 
                 <TextView
-                    android:id="@+id/textView12"
+                    android:id="@+id/textView10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:text="110 kg" />
-
+                    android:text="TextView"
+                    android:textSize="24sp" />
             </LinearLayout>
+
+
 
         </LinearLayout>
 
@@ -152,13 +159,13 @@
             android:orientation="horizontal">
 
             <Space
-                android:layout_width="wrap_content"
+                android:layout_width="256dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
             <Button
                 android:id="@+id/button2"
-                android:layout_width="23dp"
+                android:layout_width="86dp"
                 android:layout_height="62dp"
                 android:layout_weight="1"
                 android:onClick="enviarParaMqtt"
