@@ -175,7 +175,12 @@ public class MainActivity extends AppCompatActivity {
                 pessoa.setActivities(activities);
                 pessoa.setWeights(weights);
                 pessoa.setSleeps(sleeps);
-                Mqtt.publishMessage("pesoAtual", Objects.requireNonNull(pessoa.getWeights().get(pessoa.getWeights().size() - 1).getWeight()).toString());
+
+                if (pessoa.getWeightBalance() != null) {
+                    Mqtt.publishMessage("pesoAtual", pessoa.getWeightBalance().getWeight().toString());
+                } else if (pessoa.getWeights() != null) {
+                    Mqtt.publishMessage("pesoAtual", Objects.requireNonNull(pessoa.getWeights().get(pessoa.getWeights().size() - 1).getWeight()).toString());
+                }
             });
         });
 
