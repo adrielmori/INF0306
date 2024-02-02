@@ -57,10 +57,14 @@ public class DigitalTwinActivity extends AppCompatActivity {
 
         pesoAtual = findViewById(R.id.textView10);
 
-        if (pessoa.getWeights().size() == 0) {
+        if (pessoa.getWeights().size() == 0 || pessoa.getWeights() == null || pessoa.getWeightBalance() == null) {
             pesoAtual.setText("0 kg");
         } else {
-            pesoAtual.setText(pessoa.getWeights().get(pessoa.getWeights().size() - 1).getWeight().toString() + " kg");
+            if (pessoa.getWeightBalance() != null) {
+                pesoAtual.setText(pessoa.getWeightBalance().getWeight().toString() + " kg");
+            } else {
+                pesoAtual.setText(pessoa.getWeights().get(pessoa.getWeights().size() - 1).getWeight().toString() + " kg");
+            }
         }
 
         Mqtt.publishMessage("ping", "ping");

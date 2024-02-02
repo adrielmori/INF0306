@@ -132,8 +132,8 @@ public class BalanceActivity extends AppCompatActivity {
                 Calendar calendar = Calendar.getInstance();
                 Date date = calendar.getTime();
                 Long time = date.getTime();
-                pessoa.getWeights().add(new Weight(time, (float) weightInKg));
-                Log.d("BalanceActivity","Peso kg " + pessoa.getWeights().toString());
+                pessoa.setWeightBalance(new Weight(time, (float) weightInKg));
+                Log.d("BalanceActivity","Peso kg " + pessoa.getWeightBalance().getWeight());
             }
 
         });

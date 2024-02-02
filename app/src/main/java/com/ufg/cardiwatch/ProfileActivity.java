@@ -18,7 +18,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         String message = "0";
 
-        if (pessoa.getWeights() != null) {
+        if (pessoa.getWeightBalance() != null) {
+            message = pessoa.getWeightBalance().getWeight().toString();
+        } else if (pessoa.getWeights() != null) {
             message = pessoa.getWeights().get(pessoa.getWeights().size() - 1).getWeight().toString();
         }
 

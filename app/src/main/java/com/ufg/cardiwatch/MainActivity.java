@@ -49,6 +49,8 @@ import org.json.JSONException;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -99,16 +101,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 accessGoogleFit();
-            }
-        }
-
-
-        Intent intent = getIntent();
-        if (intent != null) {
-            Serializable pessoaSerializable = intent.getSerializableExtra("pessoa");
-            if (pessoaSerializable != null) {
-                Pessoa pessoa = (Pessoa) pessoaSerializable;
-                this.pessoa.setCalories(pessoa.getCalories());
             }
         }
 
