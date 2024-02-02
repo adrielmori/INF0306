@@ -4,14 +4,26 @@ import static com.ufg.cardiwatch.util.Mqtt.brokerURI;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
+import android.bluetooth.BluetoothProfile;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -27,6 +39,7 @@ import com.ufg.cardiwatch.model.HeartRate;
 import com.ufg.cardiwatch.model.Pessoa;
 import com.ufg.cardiwatch.model.Sleep;
 import com.ufg.cardiwatch.model.Step;
+import com.ufg.cardiwatch.model.WeekHorizon;
 import com.ufg.cardiwatch.model.Weight;
 import com.ufg.cardiwatch.util.Mqtt;
 
@@ -45,6 +58,13 @@ import java.util.concurrent.Executors;
 public class MainActivity extends AppCompatActivity {
 
     public static final Pessoa pessoa = new Pessoa();
+    private static final String BALANCE_ADDRESS = "88:22:B2:FF:6A:87";
+    private static final String UUID_CHARACTER = "0000181b-0000-1000-8000-00805f9b34fb";
+
+    private BluetoothAdapter bluetoothAdapter;
+    private BluetoothGatt bluetoothGatt;
+    private ArrayList<String> receivedData = new ArrayList<>();
+
     private FitnessOptions fitnessOptions = FitnessOptions.builder()
             .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
             .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
@@ -57,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
             .addDataType(DataType.TYPE_WEIGHT, FitnessOptions.ACCESS_READ)
             .addDataType(DataType.TYPE_SLEEP_SEGMENT, FitnessOptions.ACCESS_READ)
             .build();
-
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -95,6 +114,74 @@ public class MainActivity extends AppCompatActivity {
 
         Mqtt.sendSubscriptionSendNotification("cardiwatch_request", this, manager);
         sendSubscriptionSendColocaPesosPreditos("cardiwatch_request", this);
+
+//        Bluetooth Phase
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter == null) {
+            Toast.makeText(this, "Bluetooth não disponível", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+        BluetoothDevice balanceDevice = bluetoothAdapter.getRemoteDevice(BALANCE_ADDRESS);
+        if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_DENIED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.BLUETOOTH_CONNECT}, 2);
+                return;
+            }
+        }
+
+        bluetoothGatt = balanceDevice.connectGatt(this, false, new BluetoothGattCallback() {
+            @Override
+            public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+                if (newState == BluetoothProfile.STATE_CONNECTED) {
+                    Log.d("MainActivity", "Conectado ao dispositivo");
+                    gatt.discoverServices();
+                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                    Log.d("MainActivity", "Desconectado do dispositivo");
+                    if (receivedData != null && !receivedData.isEmpty()) {
+                        enviarParaMqtt();
+                        Log.d("MainActivity", "Dados recebidos: " + receivedData.toString());
+                        String lastValue = receivedData.get(receivedData.size() - 1); // Aqui eu pego o útimo valor para a balança
+                        Log.d("MainActivity", "Last Value: " + lastValue);
+                    } else {
+                        Log.d("MainActivity", "Dados recebidos: Lista vazia ou nula");
+                    }
+                    receivedData.clear();
+                }
+            }
+
+
+            @Override
+            public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+                if (status == BluetoothGatt.GATT_SUCCESS) {
+                    for (BluetoothGattService service : gatt.getServices()) {
+                        if (service.getUuid().toString().equals(UUID_CHARACTER)) {
+                            for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
+                                gatt.setCharacteristicNotification(characteristic, true);
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+                byte[] data = characteristic.getValue();
+                StringBuilder hexString = new StringBuilder();
+                for (byte b : data) {
+                    hexString.append(String.format("%02X-", b));
+                }
+                receivedData.add(hexString.toString());
+
+                // KG witght Decoder
+                if (data.length >= 13) {
+                    int weight = ((data[12] & 0xFF) << 8) | (data[11] & 0xFF);
+                    double weightInKg = weight / 200.0;
+                    Log.d("MainActivity","Peso kg " + weightInKg);
+                }
+            }
+        });
     }
 
     public void profileActivity(View view) {
@@ -199,5 +286,19 @@ public class MainActivity extends AppCompatActivity {
                     });
                 })
                 .send();
+    }
+
+
+//      Complementar para permirtir a Digital Twin sem precisar em na aba de Digital Twin
+    public void enviarParaMqtt() {
+        Log.d("MainActivity", "Oie, estou indo para o MQTT");
+        Gson gson = new Gson();
+        pessoa.setWeights_predict(null);
+        String json = gson.toJson(pessoa);
+
+        Mqtt.publishMessage("cardiwatch", json);
+
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }

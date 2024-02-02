@@ -3,18 +3,30 @@ package com.ufg.cardiwatch;
 import static com.ufg.cardiwatch.MainActivity.pessoa;
 import static com.ufg.cardiwatch.util.Mqtt.brokerURI;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
+import android.bluetooth.BluetoothProfile;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
 import com.hivemq.client.mqtt.datatypes.MqttQos;
@@ -25,19 +37,25 @@ import com.ufg.cardiwatch.model.WeekHorizon;
 import com.ufg.cardiwatch.util.Mqtt;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class DigitalTwinActivity extends AppCompatActivity {
-
+    private static final String BALANCE_ADDRESS = "88:22:B2:FF:6A:87";
+    private static final String UUID_CHARACTER = "0000181b-0000-1000-8000-00805f9b34fb";
+    private BluetoothAdapter bluetoothAdapter;
+    private BluetoothGatt bluetoothGatt;
+    private ArrayList<String> receivedData = new ArrayList<>();
+    private boolean isFirstConnection = true; // Adicione esta linha
+    private TextView pesoAtual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_digital_twin);
 
-
-        TextView pesoAtual = findViewById(R.id.textView10);
+        pesoAtual = findViewById(R.id.textView10);
 
         if (pessoa.getWeights().size() == 0) {
             pesoAtual.setText("0 kg");
@@ -59,6 +77,84 @@ public class DigitalTwinActivity extends AppCompatActivity {
         pegaCheckBox("checkbox4", this, findViewById(R.id.checkBox4));
 
         sendSubscriptionSemanaSelecionada("week", this);
+
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter == null) {
+            Toast.makeText(this, "Bluetooth não disponível", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+        connectToDevice();
+    }
+
+    private void connectToDevice() {
+        BluetoothDevice balanceDevice = bluetoothAdapter.getRemoteDevice(BALANCE_ADDRESS);
+        if (ContextCompat.checkSelfPermission(DigitalTwinActivity.this, android.Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_DENIED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                ActivityCompat.requestPermissions(DigitalTwinActivity.this, new String[]{android.Manifest.permission.BLUETOOTH_CONNECT}, 2);
+                return;
+            }
+        }
+
+        bluetoothGatt = balanceDevice.connectGatt(this, false, new BluetoothGattCallback() {
+            @Override
+            public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+                if (newState == BluetoothProfile.STATE_CONNECTED) {
+                    Log.d("BalanceActivity", "Conectado ao dispositivo");
+                    if (isFirstConnection) { // Adicione esta condição
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(DigitalTwinActivity.this, "Dispositivo conectado: " + BALANCE_ADDRESS, Toast.LENGTH_LONG).show();
+                            }
+                        });
+                        isFirstConnection = false; // Adicione esta linha
+                    }
+                    gatt.discoverServices();
+                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                    Log.d("BalanceActivity", "Desconectado do dispositivo");
+                    Log.d("BalanceActivity", "Dados recebidos: " + receivedData.toString());
+                    receivedData.clear();
+                    connectToDevice(); // Tente reconectar
+                }
+            }
+
+            @Override
+            public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+                if (status == BluetoothGatt.GATT_SUCCESS) {
+                    for (BluetoothGattService service : gatt.getServices()) {
+                        if (service.getUuid().toString().equals(UUID_CHARACTER)) {
+                            for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
+                                gatt.setCharacteristicNotification(characteristic, true);
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+                byte[] data = characteristic.getValue();
+                StringBuilder hexString = new StringBuilder();
+                for (byte b : data) {
+                    hexString.append(String.format("%02X-", b));
+                }
+                receivedData.add(hexString.toString());
+
+                // KG witght Decoder
+                if (data.length >= 13) {
+                    int weight = ((data[12] & 0xFF) << 8) | (data[11] & 0xFF);
+                    double weightInKg = weight / 200.0;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            pesoAtual.setText(weightInKg + " kg");
+                        }
+                    });
+                }
+            }
+        });
     }
     private void enviaSpinner(String topicName, Spinner spinner) {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
