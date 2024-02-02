@@ -21,14 +21,11 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.ufg.cardiwatch.model.Weight;
 import com.ufg.cardiwatch.util.Mqtt;
 
 public class BalanceActivity extends AppCompatActivity {
@@ -82,15 +79,21 @@ public class BalanceActivity extends AppCompatActivity {
                                 Toast.makeText(BalanceActivity.this, "Dispositivo conectado: " + BALANCE_ADDRESS, Toast.LENGTH_LONG).show();
                             }
                         });
-                        isFirstConnection = false; // Adicione esta linha
+                        isFirstConnection = false;
                     }
                     gatt.discoverServices();
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     if (receivedData != null && !receivedData.isEmpty()) {
                         String lastValue = receivedData.get(receivedData.size() - 1); // Aqui eu pego o útimo valor para a balança
                         double lastWeight = Double.parseDouble(lastValue);
-                        if (lastWeight > 100.0) { // Adicione esta condição
+                        if (lastWeight > 100.0) {
+                            /*
+                            * Envindo os novos dados com o novo
+                            * peso ao MQTT, para que seja processado
+                            * na AWS
+                            * */
                             enviarParaMqtt();
+
                             Log.d("BalanceActivity", "Dados recebidos: " + receivedData.toString());
                             Log.d("BalanceActivity", "Last Value: " + lastValue);
                             receivedData.clear();
@@ -98,10 +101,10 @@ public class BalanceActivity extends AppCompatActivity {
                         }
                     }else {
                         Log.d("BalanceActivity", "Array Vazio ou usuário incorreto");
-                        gatt.disconnect(); // Desconecte se não houver fluxo de dados
+                        gatt.disconnect(); // Desconectando se não houver fluxo de dados
                     }
                     receivedData.clear();
-//        connectToDevice(); // Tente reconectar
+                    connectToDevice(); // Tente reconectar
                 }
             }
 

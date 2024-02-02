@@ -2,9 +2,7 @@ package com.ufg.cardiwatch.util;
 
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,19 +11,14 @@ import com.google.gson.Gson;
 import com.hivemq.client.mqtt.datatypes.MqttQos;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5Client;
-import com.ufg.cardiwatch.MainActivity;
-import com.ufg.cardiwatch.MonitoryActivity;
 import com.ufg.cardiwatch.R;
 import com.ufg.cardiwatch.model.Weight;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class Mqtt {
