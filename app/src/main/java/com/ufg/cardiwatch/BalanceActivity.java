@@ -11,26 +11,12 @@ import android.bluetooth.BluetoothProfile;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
-import android.os.Bundle;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.UUID;
 
 
 import android.util.Log;
@@ -41,11 +27,14 @@ public class BalanceActivity extends AppCompatActivity {
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothGatt bluetoothGatt;
     private ArrayList<String> receivedData = new ArrayList<>();
+    private TextView weightTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_balance);
+
+        weightTextView = findViewById(R.id.weightTextView);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
@@ -67,6 +56,12 @@ public class BalanceActivity extends AppCompatActivity {
             public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
                 if (newState == BluetoothProfile.STATE_CONNECTED) {
                     Log.d("BalanceActivity", "Conectado ao dispositivo");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(BalanceActivity.this, "Dispositivo conectado: " + BALANCE_ADDRESS, Toast.LENGTH_LONG).show();
+                        }
+                    });
                     gatt.discoverServices();
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     Log.d("BalanceActivity", "Desconectado do dispositivo");
@@ -101,21 +96,18 @@ public class BalanceActivity extends AppCompatActivity {
                 Log.d("BalanceActivity", "Data changed: " + hexString.toString());
                 Log.d("BalanceActivity", "All received data: " + receivedData.toString());
 
-                // Decodificar o peso em kg
-                if (data.length >= 13) { // Verifique se o payload tem pelo menos 13 bytes
-                    int weight = ((data[12] & 0xFF) << 8) | (data[11] & 0xFF); // Bytes 11 e 12: peso (little endian)
-                    double weightInKg = weight / 200.0; // Peso em kg
+                // KG witght Decoder
+                if (data.length >= 13) {
+                    int weight = ((data[12] & 0xFF) << 8) | (data[11] & 0xFF);
+                    double weightInKg = weight / 200.0;
                     Log.d("BalanceActivity", "Weight in kg: " + weightInKg);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            weightTextView.setText(weightInKg + " kg");
+                        }
+                    });
                 }
-            }
-
-
-            public String bytesToHex(byte[] bytes) {
-                StringBuilder builder = new StringBuilder();
-                for (byte b: bytes) {
-                    builder.append(String.format("%02x", b));
-                }
-                return builder.toString();
             }
         });
     }
